@@ -18,7 +18,7 @@
    The collector signs up to our Dapp with his address; <br>
    The collector calls the function buyNFT(_NFTAddress); <br>
    The function buyNFT lays on th main contract and calls the transfer function but keeps the approve rights; <br>
-      >because in the first scenario the main contract called the approve function on it self, it can transfer it right away without asking consensous to the museum;
+      >because in the first scenario the main contract called the approve function on it self, it can transfer it right away without asking consensous to the museum;<
    The transfer function is payable and checks if the money send is equal the price and it transfer it otherwise it notifies the buyer; <br>
    The main contract change the owner of the nft address; <br>
   
