@@ -18,20 +18,20 @@
    The collector signs up to our Dapp with his address; <br>
    The collector calls the function buyNFT(_NFTAddress); <br>
    The function buyNFT lays on th main contract and calls the transfer function but keeps the approve rights; <br>
-      >because in the first scenario the main contract called the approve function on it self, it can transfer it right away without asking consensous to the museum;<
+      >because in the first scenario the main contract called the approve function on it self, it can transfer it right away without asking consensous to the museum;<br>
    The transfer function is payable and checks if the money send is equal the price and it transfer it otherwise it notifies the buyer; <br>
    The main contract change the owner of the nft address; <br>
   
-  * 3.A collector wants to change the price of the NFT;
-    The actor goes to the nft list and calls the changePrice(NFTAddress, newPrice) of the main contract;
-    The main contract check if the owner is the actor.
-    If true calls the changePrice of the NFTContract that will have modifies OnlyOwner and check if the main contractor is entitled to change the price
-    if so it changes it.
-  (Check if the approved users is still only the main contractor!)
+  * 3.A collector wants to change the price of the NFT; <br>
+    The actor goes to the nft list and calls the changePrice(NFTAddress, newPrice) of the main contract; <br>
+    The main contract check if the owner is the actor;<br>
+    If true calls the changePrice of the NFTContract that will have modifies OnlyOwner and check if the main contractor is entitled to change the price,
+    if so it changes it <br>
+  >(Check if the approved users is still only the main contractor!)<br>
   
-  * 4.A collector wants to get the real coin at home.
-    The collector call the function getPhysicalCoin(NFTAdddress) on the main contract;
-    The main contract removes the NFTAdress from its storage after calling the function burn.
+  * 4.A collector wants to get the real coin at home.<br>
+    The collector call the function getPhysicalCoin(NFTAdddress) on the main contract;<br>
+    The main contract removes the NFTAdress from its storage after calling the function burn.<br>
   
     
   
