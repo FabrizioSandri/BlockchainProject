@@ -29,7 +29,7 @@
     The main contract check if the owner is the actor; <br>
     If true calls the changePrice of the NFTContract that will have modifies OnlyOwner and check if the main contractor is entitled to change the price,
     if so it changes it <br>
-  >(Check if the approved users is still only the main contractor!) <br>
+    >(Check if the approved users is still only the main contractor!) <br>
   
   * 4.A collector wants to get the real coin at home.<br>
     The collector call the function getPhysicalCoin(NFTAdddress) on the main contract;<br>
