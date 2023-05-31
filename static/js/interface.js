@@ -1,0 +1,327 @@
+function createInSellHNFTCard(address, name, symbol, price, issuer="-") {
+    // Create the main card container
+    var cardDiv = document.createElement("div");
+    cardDiv.id = address;
+    cardDiv.className = "card";
+
+    // Create and append the image element
+    var img = document.createElement("img");
+    img.className = "card-img-top";
+    img.setAttribute("src", "images/honey.jpg");
+    cardDiv.appendChild(img);
+
+    // Create the card body container
+    var cardBodyDiv = document.createElement("div");
+    cardBodyDiv.className = "card-body";
+
+    // Create and append the card title
+    var cardTitle = document.createElement("h5");
+    cardTitle.className = "card-title";
+    cardTitle.textContent = name;
+    cardBodyDiv.appendChild(cardTitle);
+
+    // Append the horizontal rule
+    var hr = document.createElement("hr");
+    cardBodyDiv.appendChild(hr);
+
+
+    // Create the second row container
+    var row2Div = document.createElement("div");
+    row2Div.className = "row";
+
+    // Create and append the price element 
+    var priceDiv = document.createElement("div");
+    priceDiv.className = "col-sm-6";
+    priceDiv.textContent = `Price: ${price} ETH`;
+    row2Div.appendChild(priceDiv);
+
+    // Create and append the name element 
+    var nameDiv = document.createElement("div");
+    nameDiv.className = "col-sm-6";
+    nameDiv.textContent = `Symbol: ${symbol}`;
+    row2Div.appendChild(nameDiv);
+
+    cardBodyDiv.appendChild(row2Div);
+
+    // Create the third row container
+    var row3Div = document.createElement("div");
+    row3Div.className = "row";
+
+    // Create and append the Details button element in the third row
+    var detailsButton = document.createElement("button");
+    detailsButton.type = "button";
+    detailsButton.className = "btn btn-info full-width-btn";
+    detailsButton.setAttribute("data-toggle", "modal");
+    detailsButton.textContent = "Details";
+    detailsButton.setAttribute("onclick", `showDetails("${address}")`);
+
+    var detailsCol = document.createElement("div");
+    detailsCol.className = "col-sm-6";
+    detailsCol.appendChild(detailsButton);
+    row3Div.appendChild(detailsCol);
+
+    // Create and append the Edit button element in the third row
+    var editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "btn btn-info full-width-btn";
+    editButton.setAttribute("data-toggle", "modal");
+    editButton.setAttribute("onclick", `setPriceModal("${address}")`);
+    editButton.textContent = "Edit Price";
+    var editCol = document.createElement("div");
+    editCol.className = "col-sm-6";
+    editCol.appendChild(editButton);
+    row3Div.appendChild(editCol);
+
+    cardBodyDiv.appendChild(row3Div);
+
+    // burn button
+    var burnDiv = document.createElement("div");
+    burnDiv.className = "row";
+
+    var burnButton = document.createElement("button");
+    burnButton.type = "button";
+    burnButton.className = "btn btn-danger full-width-btn";
+    burnButton.setAttribute("onclick", `burnToken("${address}")`);
+    burnButton.textContent = "Burn";
+
+    var burnCol = document.createElement("div");
+    burnCol.className = "col-sm-12";
+
+    burnCol.appendChild(burnButton);
+    burnDiv.appendChild(burnCol);
+    cardBodyDiv.appendChild(burnDiv);
+
+    // Append the card body to the main card container
+    cardDiv.appendChild(cardBodyDiv);
+
+    // Append the main card container to the document body or any desired parent element
+    document.getElementById("sell-list").appendChild(cardDiv);
+
+}
+
+
+
+function createNotInSellHNFTCard(address, name, symbol, price, issuer="-", approved_status=false) {
+    // Create the main card container
+    var cardDiv = document.createElement("div");
+    cardDiv.id = address;
+    cardDiv.className = "card";
+
+    // Create and append the image element
+    var img = document.createElement("img");
+    img.className = "card-img-top";
+    img.setAttribute("src", "images/honey.jpg");
+    cardDiv.appendChild(img);
+
+    // Create the card body container
+    var cardBodyDiv = document.createElement("div");
+    cardBodyDiv.className = "card-body";
+
+    // Create and append the card title
+    var cardTitle = document.createElement("h5");
+    cardTitle.className = "card-title";
+    cardTitle.textContent = name;
+    cardBodyDiv.appendChild(cardTitle);
+
+    // Append the horizontal rule
+    var hr = document.createElement("hr");
+    cardBodyDiv.appendChild(hr);
+
+
+    // Create the second row container
+    var row2Div = document.createElement("div");
+    row2Div.className = "row";
+
+    // Create and append the price element 
+    var priceDiv = document.createElement("div");
+    priceDiv.className = "col-sm-6";
+    priceDiv.textContent = `Price: ${price} ETH`;
+    row2Div.appendChild(priceDiv);
+
+    // Create and append the name element 
+    var nameDiv = document.createElement("div");
+    nameDiv.className = "col-sm-6";
+    nameDiv.textContent = `Symbol: ${symbol}`;
+    row2Div.appendChild(nameDiv);
+
+    cardBodyDiv.appendChild(row2Div);
+
+    // Create the third row container
+    var row3Div = document.createElement("div");
+    row3Div.className = "row";
+
+    // Create and append the Details button element in the third row
+    var detailsButton = document.createElement("button");
+    detailsButton.type = "button";
+    detailsButton.className = "btn btn-info full-width-btn";
+    detailsButton.setAttribute("data-toggle", "modal");
+    detailsButton.textContent = "Details";
+    detailsButton.setAttribute("onclick", `showDetails("${address}")`);
+    var detailsCol = document.createElement("div");
+    detailsCol.className = "col-sm-12";
+    detailsCol.appendChild(detailsButton);
+    row3Div.appendChild(detailsCol);
+
+    cardBodyDiv.appendChild(row3Div);
+
+    // put on market button
+    var row4Div = document.createElement("div");
+    row4Div.className = "row";
+
+    var approveButton = document.createElement("button");
+    approveButton.type = "button";
+    approveButton.id = "approve_" + address;
+    approveButton.className = "btn btn-info full-width-btn";
+    approveButton.setAttribute("onclick", `approveNFT("${address}")`);
+    approveButton.textContent = "1. Approve";
+    
+    if (approved_status == true){
+        approveButton.disabled = true;
+    }
+
+    var approveCol = document.createElement("div");
+    approveCol.className = "col-sm-12";
+
+    approveCol.appendChild(approveButton);
+    row4Div.appendChild(approveCol);
+
+    var row5Div = document.createElement("div");
+    row5Div.className = "row";
+
+    var putOnMarketButton = document.createElement("button");
+    putOnMarketButton.type = "button";
+    putOnMarketButton.className = "btn btn-info full-width-btn";
+    putOnMarketButton.setAttribute("onclick", `putOnMarketModal("${address}")`);
+    putOnMarketButton.setAttribute("data-target", "#put-on-market-modal");
+    putOnMarketButton.textContent = "2. Put on market";
+    
+    var putCol = document.createElement("div");
+    putCol.className = "col-sm-12";
+    
+    putCol.appendChild(putOnMarketButton);
+    row5Div.appendChild(putCol);
+
+    cardBodyDiv.appendChild(row4Div);
+    cardBodyDiv.appendChild(row5Div);
+
+
+    // Append the card body to the main card container
+    cardDiv.appendChild(cardBodyDiv);
+
+    // Append the main card container to the document body or any desired parent element
+    document.getElementById("created-list").appendChild(cardDiv);
+
+}
+
+function getNFTDetails(HNFTaddress) {
+    return new Promise((resolve, reject) => {
+
+        getName(HNFTaddress).then((name) => {
+            getSymbol(HNFTaddress).then((symbol) => {
+                getPrice(HNFTaddress).then((price) => {
+                    getOwner(HNFTaddress).then((owner) => {
+                        getIssuer(HNFTaddress).then((issuer) => {
+                        
+                            resolve({
+                                name: name,
+                                symbol: symbol,
+                                address: HNFTaddress,
+                                price: price,
+                                owner: owner,
+                                issuer: issuer
+                            });
+
+                        }).catch((err) => {
+                            reject("error [getIssuer] : " + err);
+                        });
+                    }).catch((err) => {
+                        reject("error [getOwner] : " + err);
+                    });
+                }).catch((err) => {
+                    reject("error [getPrice] : " + err);
+                });
+            }).catch((err) => {
+                reject("error [getSymbol] : " + err);
+            });
+        }).catch((err) => {
+            reject("error [getName] : " + err);
+        });
+    });
+}
+
+function putOnMarketModal(address) {
+    $('#put-on-market-modal').modal('show');
+    let putOnMarketSubmit = document.getElementById("put-on-market-submit");
+    putOnMarketSubmit.setAttribute("onclick", `putOnMarket("${address}")`);
+}
+
+
+function setPriceModal(address) {
+    $('#change-price-modal').modal('show');
+    let changePriceSubmit = document.getElementById("change-price-submit");
+    changePriceSubmit.setAttribute("onclick", `setPrice("${address}")`);
+}
+
+
+function showDetails(HNFTaddress) {
+    $('#details-modal').modal('show');
+
+    getNFTDetails(HNFTaddress).then((details) => {  
+
+        document.getElementById("details-name").innerHTML = `${details.name}`;
+        document.getElementById("details-symbol").innerHTML = `${details.symbol}`;
+        document.getElementById("details-address").innerHTML = `${HNFTaddress}`;
+        document.getElementById("details-price").innerHTML = `${details.price} ETH`;
+        document.getElementById("details-owner").innerHTML = `${details.owner}`;
+        document.getElementById("details-issuer").innerHTML = `${details.issuer}`;
+
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+
+function createInSellList() {
+    getInSellItems().then((inSell) => {
+        document.getElementById("sell-list").innerHTML = "";
+        inSell.forEach(HNFTaddress => {
+            getNFTDetails(HNFTaddress).then((details) => {
+                createInSellHNFTCard(HNFTaddress, details.name, details.symbol, details.price);
+            }).catch((err) => {
+                console.log(err);
+            });
+        });
+    }).catch((err) => {
+        console.log("error: no item in sell");
+    })
+}
+
+
+function createNotInSellList() {
+
+    // get the list of created NFTs from the cookies
+    NFTCreated = getCookie("createdNFTs");
+    if (!NFTCreated){
+        NFTCreated = [];
+    }else{
+        NFTCreated = JSON.parse(NFTCreated);
+    }
+
+    document.getElementById("created-list").innerHTML = "";
+    NFTCreated.forEach(HNFTaddress => {
+
+        isAssociationApproved(HNFTaddress).then((approved) => {
+            getNFTDetails(HNFTaddress).then((details) => {
+                createNotInSellHNFTCard(HNFTaddress, details.name, details.symbol, details.price, details.issuer, approved);
+            }).catch((err) => {
+                console.log(err);
+            });
+        }).catch((err) => {
+            console.log(err);
+        });
+
+    });
+}
+
+
+
