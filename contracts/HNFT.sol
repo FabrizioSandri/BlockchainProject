@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "truffle/console.sol";
 
 contract HNFT is ERC721 {
-    uint public price;
+    uint price;
     address issuer;
 
     constructor(

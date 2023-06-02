@@ -36,6 +36,58 @@ contract MainSmartContract {
         return res;
     }
 
+    function setPrice(
+        address NFTAddress,
+        uint256 _price
+    ) external returns (bool) {
+        (bool resb, bytes memory res) = NFTAddress.call(
+            abi.encodeWithSignature("setPrice(uint256)", _price)
+        );
+        if (!resb) {
+            revert("error in set Price");
+        } else {
+            return true;
+        }
+    }
+
+    function buy(address NFTAddress, address ownerOfNft) external payable {
+        (, bytes memory res) = NFTAddress.call(
+            abi.encodeWithSignature("getPrice()")
+        );
+        uint256 price = abi.decode(res, (uint));
+        require(msg.value == price * 1 ether, "not enough value provided");
+
+        address payable _owner = payable(ownerOfNft);
+        _owner.transfer(msg.value);
+
+        (bool resb, bytes memory res2) = NFTAddress.call(
+            abi.encodeWithSignature(
+                "transferBuy(address,address)",
+                ownerOfNft,
+                msg.sender
+            )
+        );
+        if (!resb) {
+            revert("The NFT was not transfered");
+        }
+        if (!removeElement(inSellItems, NFTAddress)) {
+            revert("The NFT does not exists in the sell market");
+        }
+    }
+
+    function CheckValidity(address NFTAddress) external view returns (bool) {
+        if (containsAddress(NFTAddress, issuedItems)) {
+            return true;
+        }
+        return false;
+    }
+
+    function removeInSellItem(address NFTAddress) external {
+        if (!removeElement(inSellItems, NFTAddress)) {
+            revert("The NFT does not exists in the sell market");
+        }
+    }
+
     function burn(address NFTAddress) external returns (bool) {
         bool resb;
         (resb, ) = NFTAddress.call(abi.encodeWithSignature("burn()"));
