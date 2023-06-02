@@ -14,6 +14,7 @@ function connectToMetaMask() {
                 connectedAddress = accounts[0];
                 document.getElementById("metamask_connection").innerText = connectedAddress;
                 refreshLists();
+                
             }).catch((err) => {
                 document.getElementById("metamask_connection").innerText = "failed";
             });

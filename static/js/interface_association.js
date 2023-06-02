@@ -65,6 +65,8 @@ function createInSellHNFTCard(address, name, symbol, price) {
     editButton.type = "button";
     editButton.className = "btn btn-info full-width-btn";
     editButton.setAttribute("data-toggle", "modal");
+    editButton.name = "edit-price";
+    editButton.disabled = true;
     editButton.setAttribute("onclick", `setPriceModal("${address}")`);
     editButton.textContent = "Edit Price";
     var editCol = document.createElement("div");
@@ -80,6 +82,8 @@ function createInSellHNFTCard(address, name, symbol, price) {
 
     var removeFromSellButton = document.createElement("button");
     removeFromSellButton.type = "button";
+    removeFromSellButton.disabled = true;
+    removeFromSellButton.name = "remove-from-market";
     removeFromSellButton.className = "btn btn-danger full-width-btn";
     removeFromSellButton.setAttribute("onclick", `removeFromMarket("${address}")`);
     removeFromSellButton.textContent = "Remove from market";
@@ -100,11 +104,12 @@ function createInSellHNFTCard(address, name, symbol, price) {
 }
 
 function addPlusButton() {
-
+    
     var plus_button = document.createElement("button");
     plus_button.className = "card";
     plus_button.setAttribute("data-toggle", "modal");
     plus_button.setAttribute("data-target", "#create-hnft");
+    plus_button.id = "create-nft"; 
 
     var plusCardBodyDiv = document.createElement("div");
     plusCardBodyDiv.className = "card-body";
@@ -113,7 +118,13 @@ function addPlusButton() {
     plusIcon.className = "fas fa-plus fa-7x";
     plusCardBodyDiv.appendChild(plusIcon);
     plus_button.appendChild(plusCardBodyDiv);
+
+    if (!connectedAddress){
+        plus_button.hidden = true;
+    }
+
     document.getElementById("created-list").appendChild(plus_button);
+    
 }
 
 function createNotInSellHNFTCard(address, name, symbol, price, issuer="-", approved_status=false) {
@@ -205,6 +216,8 @@ function createNotInSellHNFTCard(address, name, symbol, price, issuer="-", appro
 
     var putOnMarketButton = document.createElement("button");
     putOnMarketButton.type = "button";
+    putOnMarketButton.disabled = true;
+    putOnMarketButton.name = "put-on-market";
     putOnMarketButton.className = "btn btn-info full-width-btn";
     putOnMarketButton.setAttribute("onclick", `putOnMarketModal("${address}")`);
     putOnMarketButton.setAttribute("data-target", "#put-on-market-modal");
@@ -259,26 +272,37 @@ function showDetails(HNFTaddress) {
     });
 }
 
+previousDetailsSell = {};
 
 function createInSellList() {
     getInSellItems().then((inSell) => {
-        document.getElementById("sell-list").innerHTML = "";
+        let promises = []
+        inSell.forEach(HNFTaddress => {
+            promises.push(getNFTDetails(HNFTaddress));    
+        });
+
         if (!inSell || inSell.length==0){
             document.getElementById("sell-list").innerHTML = "No item in sell";
-        }else{
-            inSell.forEach(HNFTaddress => {
-                getNFTDetails(HNFTaddress).then((details) => {
-                    createInSellHNFTCard(HNFTaddress, details.name, details.symbol, details.price);
-                }).catch((err) => {
-                    console.log(err);
+        }
+        
+        Promise.all(promises).then((allDetails) => {
+            if (previousDetailsSell != JSON.stringify(allDetails)){
+                previousDetailsSell = JSON.stringify(allDetails);
+                document.getElementById("sell-list").innerHTML = "";
+                
+                allDetails.forEach(details => {
+                    createInSellHNFTCard(details.address, details.name, details.symbol, details.price);
                 });
-            });
-        }        
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
     }).catch((err) => {
         console.log("error: no item in sell");
     })
 }
 
+previousDetails = null;
 
 function createNotInSellList() {
 
@@ -288,25 +312,28 @@ function createNotInSellList() {
         NFTCreated = [];
     }else{
         NFTCreated = JSON.parse(NFTCreated);
-    }
 
-    document.getElementById("created-list").innerHTML = "";
-
-    addPlusButton();
-
-    NFTCreated.forEach(HNFTaddress => {
-
-        isAssociationApproved(HNFTaddress).then((approved) => {
-            getNFTDetails(HNFTaddress).then((details) => {
-                createNotInSellHNFTCard(HNFTaddress, details.name, details.symbol, details.price, details.issuer, approved);
-            }).catch((err) => {
-                console.log(err);
-            });
-        }).catch((err) => {
-            console.log(err);
+        let promises = []
+        NFTCreated.forEach(HNFTaddress => {
+            promises.push(getNFTDetails(HNFTaddress));    
         });
 
-    });
+        Promise.all(promises).then((allDetails) => {
+            if (previousDetails != JSON.stringify(allDetails)){
+                previousDetails = JSON.stringify(allDetails);
+                document.getElementById("created-list").innerHTML = "";
+                addPlusButton();
+                
+                allDetails.forEach(details => {
+                    createNotInSellHNFTCard(details.address, details.name, details.symbol, details.price, details.issuer, details.approved);
+                });
+            }
+        }).catch((err) => {
+            console.log(err);
+        });        
+
+    }
+    
 }
 
 

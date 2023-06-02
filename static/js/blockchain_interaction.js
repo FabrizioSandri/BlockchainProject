@@ -467,14 +467,18 @@ function getNFTDetails(HNFTaddress) {
                 getPrice(HNFTaddress).then((price) => {
                     getOwner(HNFTaddress).then((owner) => {
                         getIssuer(HNFTaddress).then((issuer) => {
-                        
-                            resolve({
-                                name: name,
-                                symbol: symbol,
-                                address: HNFTaddress,
-                                price: price,
-                                owner: owner,
-                                issuer: issuer
+                            isAssociationApproved(HNFTaddress).then((approved) => {
+                                resolve({
+                                    name: name,
+                                    symbol: symbol,
+                                    address: HNFTaddress,
+                                    price: price,
+                                    owner: owner,
+                                    issuer: issuer,
+                                    approved: approved
+                                });
+                            }).catch((err) => {
+                                reject("error [isAssociationApproved] : " + err);
                             });
 
                         }).catch((err) => {
