@@ -1,6 +1,5 @@
 let web3 = new Web3("http://127.0.0.1:7545");
 
-var deployedNFTAdddress;
 var NFTCreated = [];    // list of HNFTs that are not in sell
 
 
@@ -47,6 +46,34 @@ getContractInfo("MainSmartContract").then((res) => {
 }).catch((errorMsg) => {
     console.log(errorMsg);
 })
+
+
+
+/**
+ * The following two functions waits for a transaction to be mined
+ */
+function waitPromise(resolve, reject, transactionHash, trials) {
+    web3.eth.getTransactionReceipt(transactionHash).then((receipt) => {
+        
+        if (trials <= 0){
+            reject("Error: waiting too much time for a transaction to complete.")
+        }else if(receipt == null){
+            setTimeout( () => waitPromise(resolve, reject, transactionHash), 500, trials-1);
+        }else {
+            // return the receipt
+            resolve(receipt);
+        }
+
+    }).catch((error) => {
+        reject('Error retrieving transaction receipt: ', error);
+    });
+}
+
+function waitForConfirmation(transactionHash) {
+    return new Promise((resolve, reject) => {
+        waitPromise(resolve, reject, transactionHash, trials=120);
+    });
+}
 
 
 
@@ -117,20 +144,20 @@ function createHNFT() {
                 data: deploymentPayload.data + encodedArguments,
         }],
     }).then((transactionHash) => {
-        web3.eth.getTransactionReceipt(transactionHash).then((receipt) => {
-                if (receipt && receipt.contractAddress) {
-                    deployedNFTAdddress = receipt.contractAddress;
-                    console.log('address deployed: ', receipt.contractAddress);
-                    NFTCreated.push(deployedNFTAdddress);
+        waitForConfirmation(transactionHash).then((receipt) => {
+            console.log(receipt)
+            if (receipt && receipt.contractAddress) {
+                console.log('address deployed: ', receipt.contractAddress);
+                NFTCreated.push(receipt.contractAddress);
 
-                    // store the new updated list in the cookies
-                    setCookie('createdNFTs', JSON.stringify(NFTCreated), 365);
-                    createNotInSellList();
-                }
-            }).catch((error) => {
+                // store the new updated list in the cookies
+                setCookie('createdNFTs', JSON.stringify(NFTCreated), 365);
+                createNotInSellList();
+            }
+        }).catch((error) => {
 
-                console.error('Error retrieving transaction receipt:', error);
-            })
+            console.error('Error retrieving transaction receipt:', error);
+        })
     }).catch((error) => {
         console.error('Error deploying contract:', error);
     });
@@ -174,7 +201,7 @@ function setPrice(NFTAddress) {
         params: [{ from: connectedAddress, to: mainSmartContractAddress, data: fun }]
     })
     .then((transactionHash) => {
-        web3.eth.getTransactionReceipt(transactionHash).then((receipt) => {
+        waitForConfirmation(transactionHash).then((receipt) => {
             
             createInSellList();
             createNotInSellList();
@@ -200,7 +227,7 @@ function burnToken(NFTAddress) {
     }).then((transactionHash) => {
 
         const returnStatus = web3.eth.abi.decodeParameter("bool", transactionHash);
-        web3.eth.getTransactionReceipt(transactionHash).then((receipt) => {
+        waitForConfirmation(transactionHash).then((receipt) => {
 
             if (returnStatus == true){
                 // update the lists of NFTs
@@ -237,7 +264,9 @@ function putOnMarket(NFTAddress) {
         params: [{ from: connectedAddress, to: mainSmartContractAddress, data: fun }]
     })
     .then((transactionHash) => {
-        web3.eth.getTransactionReceipt(transactionHash).then((receipt) => {
+        waitForConfirmation(transactionHash).then((receipt) => {
+
+            console.log(receipt)
             // update the lists of NFTs
             var index = NFTCreated.indexOf(NFTAddress);
             if (index !== -1) {
@@ -257,6 +286,39 @@ function putOnMarket(NFTAddress) {
 }
 
 
+
+/**
+ * Remove the item from the market
+ */
+function removeFromMarket(NFTAddress) {
+    const contract = new web3.eth.Contract(mainContractInfo.abi, mainSmartContractAddress);
+
+    let fun = contract.methods.removeInSellItem(NFTAddress).encodeABI();
+    window.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [{ from: connectedAddress, to: mainSmartContractAddress, data: fun }]
+    })
+    .then((transactionHash) => {
+        waitForConfirmation(transactionHash).then((receipt) => {
+            // update the lists of NFTs
+            NFTCreated.push(NFTAddress);
+
+            // store the new updated list in the cookies
+            setCookie('createdNFTs', JSON.stringify(NFTCreated), 365);
+            createInSellList();
+            createNotInSellList();
+            
+            // TODO: check for reverts
+            console.log(receipt);
+
+        }).catch((error) => {
+            console.error('Error retrieving transaction receipt:', error);
+        });
+
+    })
+    .catch(err => console.log("transazione setprice error:", err))
+}
+
 /**
  * Approve the HNFT specified for the Main smart contract
  */
@@ -269,7 +331,7 @@ function approveNFT(NFTAddress) {
         method: 'eth_sendTransaction',
         params: [{ from: connectedAddress, to: NFTAddress, data: fun }]
     }).then((transactionHash) => {
-        web3.eth.getTransactionReceipt(transactionHash).then((receipt) => {
+        waitForConfirmation(transactionHash).then((receipt) => {
             if (receipt) {
                 document.getElementById("approve_"+NFTAddress).disabled = true;
             }
