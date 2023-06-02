@@ -25,8 +25,6 @@ contract HNFT is ERC721 {
     }
 
     function setPrice(uint _price) public returns (bool) {
-        console.log("set price");
-
         require(
             _isApprovedOrOwner(tx.origin, 0),
             "The transaction origin caller is not allowed to perform this action"
@@ -48,7 +46,6 @@ contract HNFT is ERC721 {
     }
 
     function burn() public {
-        console.log("burning token");
         _isApprovedOrOwner(tx.origin, 0);
         super._burn(0);
     }
