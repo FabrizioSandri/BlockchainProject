@@ -81,7 +81,7 @@ function createInSellHNFTCard(address, name, symbol, price) {
     var removeFromSellButton = document.createElement("button");
     removeFromSellButton.type = "button";
     removeFromSellButton.className = "btn btn-danger full-width-btn";
-    removeFromSellButton.setAttribute("onclick", `removeFromSell("${address}")`);
+    removeFromSellButton.setAttribute("onclick", `removeFromMarket("${address}")`);
     removeFromSellButton.textContent = "Remove from market";
 
     var removeFromSellCol = document.createElement("div");
