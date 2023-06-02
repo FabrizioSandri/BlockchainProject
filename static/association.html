@@ -12,38 +12,8 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <style>
-        .card{
-            margin: 1.5em;
-            border-radius: 2em;
-            text-align: center;
-            box-shadow: 0 5px 10px rgba(0,0,0,.2);
-            margin-bottom: 10px;
-            width: 18rem;
-        }
-        
-        .row {
-            margin-top: 5px;
-            margin-bottom: 5px;
-        }
-
-        .full-width-btn {
-            width: 100%;
-        }
-
-        .full-btn {
-            width: 100%;
-            height: 100%;
-        }
-
-        .priceBox-class {
-            width: 5em;
-        }
-
-        .CreateNFT {
-            padding: 0.2em;
-        }
-    </style>
+    <link rel="stylesheet" href="css/main.css">
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -57,31 +27,45 @@
     <script src="js/cookie_functions.js" ></script>
     <script src="js/metamask_connection.js" ></script>
     <script src="js/blockchain_interaction.js" ></script>
-    <script src="js/interface.js" ></script>
+    <script src="js/interface_association.js" ></script>
 
 </head>
 
 <body>
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <p>Metamask: <span id="metamask_connection">disconnected</span></p>
-            <button type="button" class="btn btn-secondary" onclick="connectToMetaMask()">Connect</button>
-        </div>
-
-        <div class="row justify-content-center">
-            <h2>Beekeper association</h2>
-        </div>
-
-
-        <button class="card" data-toggle="modal" data-target="#create-hnft">
-            <div class="card-body">
-                <i class="fas fa-plus fa-7x"></i>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+    
+            <a class="navbar-brand" href="#">
+                Beekeepers Association
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="fas fa-bars"></span>
+            </button>
+    
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="/buyer.html">Switch to buyer</a>
+                </div>
             </div>
-        </button>
 
-        <hr />
-        <h4>In sell</h4>
+            <div class="navbar-collapse collapse order-3">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item address">
+                        <a class="nav-item nav-link" id="metamask_connection">Disconnected</a>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-info" onclick="connectToMetaMask()">Connect with Metamask</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        
+        <h3>In sell</h3>
 
         <div class="row justify-content-center" id="sell-list">
 
@@ -90,9 +74,13 @@
         </div>
 
         <hr />
-        <h4>Not in sell HNFTs</h4>
+        <h3>Not in sell HNFTs</h3>
         <div class="row justify-content-center" id="created-list">
-
+            <button class="card" data-toggle="modal" data-target="#create-hnft">
+                <div class="card-body">
+                    <i class="fas fa-plus fa-7x"></i>
+                </div>
+            </button>
         </div>
 
     </div>
@@ -213,15 +201,11 @@
     </div>
 
 
-    <!-- <script src="./Scripts/AATScript.js"></script> -->
-
     <script>
         function refreshLists() {
             createInSellList();
             createNotInSellList();
         }
-
-        
         
     </script>
 
