@@ -51,36 +51,6 @@ getContractInfo("MainSmartContract").then((res) => {
 
 
 
-function buyHNFT() {
-    const valueInInt = document.getElementById("valueToSpend").value;
-    const nftAddressToBuy = document.getElementById("nftAddressInteract").value;
-
-    web3provider = new Web3.providers.HttpProvider('http://localhost:7545');
-    web3 = new Web3(web3provider);
-    const contract = new web3.eth.Contract(mainContractInfo.abi, mainSmartContractAddress);
-    const valueInWei = web3.utils.toWei(valueInInt.toString(), 'ether');
-
-    // Convert wei to hexadecimal
-    const hexValue = web3.utils.toHex(valueInWei);
-
-    getOwner(nftAddressToBuy)
-        .then((ownerNFT) => {
-
-            console.log("ownernft:", ownerNFT);
-            let fun = contract.methods.Buy(nftAddressToBuy, ownerNFT).encodeABI();
-            console.log(hexValue, "hex val");
-            window.ethereum.request({
-                method: 'eth_sendTransaction',
-                params: [{ from: connectedAddress, to: mainSmartContractAddress, value: hexValue, data: fun }]
-            })
-                .then((res) => {
-                    console.log("transazione buy andata a buon fine: ", res)
-                })
-                .catch(err => console.log("transazione buy error:", err))
-        })
-        .catch((err) => console.log(err));
-}
-
 function checkHNFTValidity() {
     const checkValidityAddress = document.getElementById("nftAddressInteract").value;
 
@@ -164,6 +134,31 @@ function createHNFT() {
     }).catch((error) => {
         console.error('Error deploying contract:', error);
     });
+}
+
+/**
+ * Buy a HNFT
+ */
+function buyHNFT(NFTAddress, price) {
+
+    const contract = new web3.eth.Contract(mainContractInfo.abi, mainSmartContractAddress);
+    const valueInWei = web3.utils.toWei(price.toString(), 'ether');
+
+    // Convert wei to hexadecimal
+    const hexValue = web3.utils.toHex(valueInWei);
+
+    getOwner(NFTAddress).then((ownerNFT) => {
+
+        let fun = contract.methods.buy(NFTAddress, ownerNFT).encodeABI();
+
+        window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [{ from: connectedAddress, to: mainSmartContractAddress, value: hexValue, data: fun }]
+        }).then((res) => {
+            console.log("transazione buy andata a buon fine: ", res)
+        }).catch(err => console.log("transazione buy error:", err))
+
+    }).catch((err) => console.log(err));
 }
 
 /**
@@ -395,5 +390,45 @@ function getSymbol(NFTAddress) {
             const decodedResult = web3.eth.abi.decodeParameter('string', res);
             resolve(decodedResult);
         }).catch(err => reject(err))
+    });
+}
+
+
+/**
+ * Get the NFT details
+ */
+function getNFTDetails(HNFTaddress) {
+    return new Promise((resolve, reject) => {
+
+        getName(HNFTaddress).then((name) => {
+            getSymbol(HNFTaddress).then((symbol) => {
+                getPrice(HNFTaddress).then((price) => {
+                    getOwner(HNFTaddress).then((owner) => {
+                        getIssuer(HNFTaddress).then((issuer) => {
+                        
+                            resolve({
+                                name: name,
+                                symbol: symbol,
+                                address: HNFTaddress,
+                                price: price,
+                                owner: owner,
+                                issuer: issuer
+                            });
+
+                        }).catch((err) => {
+                            reject("error [getIssuer] : " + err);
+                        });
+                    }).catch((err) => {
+                        reject("error [getOwner] : " + err);
+                    });
+                }).catch((err) => {
+                    reject("error [getPrice] : " + err);
+                });
+            }).catch((err) => {
+                reject("error [getSymbol] : " + err);
+            });
+        }).catch((err) => {
+            reject("error [getName] : " + err);
+        });
     });
 }
