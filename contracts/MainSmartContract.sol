@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
+
 import "./HNFT.sol";
-import "truffle/console.sol";
+
+//add for debugging purpuse
+//import "truffle/console.sol";
 
 contract MainSmartContract {
     address private owner;
@@ -40,7 +43,7 @@ contract MainSmartContract {
         address NFTAddress,
         uint256 _price
     ) external returns (bool) {
-        (bool resb, bytes memory res) = NFTAddress.call(
+        (bool resb, ) = NFTAddress.call(
             abi.encodeWithSignature("setPrice(uint256)", _price)
         );
         if (!resb) {
@@ -60,7 +63,7 @@ contract MainSmartContract {
         address payable _owner = payable(ownerOfNft);
         _owner.transfer(msg.value);
 
-        (bool resb, bytes memory res2) = NFTAddress.call(
+        (bool resb, ) = NFTAddress.call(
             abi.encodeWithSignature(
                 "transferBuy(address,address)",
                 ownerOfNft,
