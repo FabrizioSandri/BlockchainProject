@@ -26,6 +26,22 @@ contract("MainSmartContract/HNFT tests", (accounts) => {
         }
     });
 
-    
+    it("MainSmartContract should get a true when checking of the validity of a HNFT", async () => {
+        let issuer = accounts[1];
+        let value = 3;
+        try {
+            const mainSmartContractInstance = await mainSmartContract.deployed();
+            const mainSmartContractAddress = mainSmartContractInstance.address;
+            let HNFTInstance = await HNFTContract.new("TEST", "TST", { from: issuer });
+            // Attempt to set Price from MainSmartContract without approval
+            let res = await HNFTInstance.approve(mainSmartContractAddress, 0, { from: issuer });
+            res = await mainSmartContractInstance.sell(HNFTInstance.address, value, { from: issuer });
+            res = await mainSmartContractInstance.CheckValidity(HNFTInstance.address, { from: issuer });
+            assert.strictEqual(res, true, 'Value should be true');
+        } catch (error) {
+            assert.fail("Unexpected Error");
+        }
+    });
+
 
 });
