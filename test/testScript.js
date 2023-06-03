@@ -78,5 +78,49 @@ contract("MainSmartContract/HNFT tests", (accounts) => {
         }
     });
 
+    it("MainSmartContract should not be able to transfer HNFT without approve", async () => {
+        let issuer = accounts[1];
+        const buyer = accounts[5];
+        let value = 0;
+        try {
+            const mainSmartContractInstance = await mainSmartContract.deployed();
+            let HNFTInstance = await HNFTContract.new("TEST", "TST", { from: issuer });
+            // Attempt to transfer HNFT without approval
+            let owner = await HNFTInstance.ownerOf(0, { from: issuer });
+            //Convert int to wei
+            const valueInWei = web3.utils.toWei(value.toString(), 'ether');
+            // Convert wei to hexadecimal
+            const hexValue = web3.utils.toHex(valueInWei);
+            res = await mainSmartContractInstance.buy(HNFTInstance.address, owner, { from: buyer, value: hexValue });
+            assert.fail("an error should be thrown");
+
+        } catch (error) {
+            assert.equal(error.data.reason, "The NFT was not transfered", "Unexpected error message");
+        }
+    });
+
+    it("MainSmartContract should be able to transfer token on behalf of the owner after approve", async () => {
+        let issuer = accounts[1];
+        const buyer = accounts[4];
+        let value = 3;
+        try {
+            const mainSmartContractInstance = await mainSmartContract.deployed();
+            let mainSmartContractAddress = mainSmartContractInstance.address;
+            let HNFTInstance = await HNFTContract.new("TEST", "TST", { from: issuer });
+            // Attempt to transfer HNFT with approval
+            let res = await HNFTInstance.approve(mainSmartContractAddress, 0, { from: issuer });
+            let owner = await HNFTInstance.ownerOf(0, { from: issuer });
+            res = await mainSmartContractInstance.sell(HNFTInstance.address, 3, { from: issuer });
+            //Convert int to wei
+            const valueInWei = web3.utils.toWei(value.toString(), 'ether');
+            // Convert wei to hexadecimal
+            const hexValue = web3.utils.toHex(valueInWei);
+            res = await mainSmartContractInstance.buy(HNFTInstance.address, owner, { from: buyer, value: hexValue });
+            let newOwner = await HNFTInstance.ownerOf(0);
+            assert.equal(newOwner, buyer, "the main smart contract could not do the transfer");
+        } catch (error) {
+            assert.fail("got an unexpected error: ");
+        }
+    });
 
 });
