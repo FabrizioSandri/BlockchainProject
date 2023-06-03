@@ -76,30 +76,6 @@ function waitForConfirmation(transactionHash) {
 }
 
 
-
-
-function checkHNFTValidity() {
-    const checkValidityAddress = document.getElementById("nftAddressInteract").value;
-
-    const contract = new web3.eth.Contract(mainContractInfo.abi, mainSmartContractAddress);
-
-    let fun = contract.methods.CheckValidity(checkValidityAddress).encodeABI();
-
-    ethereum.request({
-        method: 'eth_call',
-        params: [{ from: connectedAddress, to: mainSmartContractAddress, data: fun }]
-    }).then((res) => {
-        console.log(res);
-        const decodedResult = web3.eth.abi.decodeParameter('bool', res);
-        if (decodedResult) {
-            console.log("the nft is verified");
-        }
-        else {
-            console.error("NFT NOT VERIFIED!");
-        }
-    }).catch(err => console.log("error trans", err))
-}
-
 function getIssuedItems() {
 
     const contract = new web3.eth.Contract(mainContractInfo.abi, mainSmartContractAddress);
@@ -117,9 +93,32 @@ function getIssuedItems() {
 
 }
 
+
+/**
+ * Auxiliary function to return an address without zero padding 
+ */
 function getActualAddressString(returnedAddress) {
     const address = returnedAddress.slice(-40);
     return '0x' + address;
+}
+
+/**
+ * Check the validity of a given HNFT
+ */
+function checkHNFTValidity(NFTAddress) {
+    return new Promise((resolve, reject) => {
+        const contract = new web3.eth.Contract(mainContractInfo.abi, mainSmartContractAddress);
+
+        let fun = contract.methods.CheckValidity(NFTAddress).encodeABI();
+
+        ethereum.request({
+            method: 'eth_call',
+            params: [{ from: connectedAddress, to: mainSmartContractAddress, data: fun }]
+        }).then((res) => {
+            const decodedResult = web3.eth.abi.decodeParameter('bool', res);
+            resolve(decodedResult);
+        }).catch(err => reject("CheckValidity error: " + err))
+    });
 }
 
 
@@ -155,7 +154,6 @@ function createHNFT() {
                 createNotInSellList();
             }
         }).catch((error) => {
-
             console.error('Error retrieving transaction receipt:', error);
         })
     }).catch((error) => {

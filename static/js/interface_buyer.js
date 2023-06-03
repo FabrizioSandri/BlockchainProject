@@ -129,3 +129,34 @@ function buy(address) {
     let putOnMarketSubmit = document.getElementById("put-on-market-submit");
     putOnMarketSubmit.setAttribute("onclick", `putOnMarket("${address}")`);
 }
+
+
+function checkHNFT() {
+    let address = document.getElementById("check-validity").value;
+    document.getElementById("check-success").hidden = true;
+    document.getElementById("check-fail").hidden = true;
+
+    checkHNFTValidity(address).then((validity) => {
+        if (validity){
+            document.getElementById("check-success").hidden = false;
+            
+            // show the HNFT details 
+            getNFTDetails(address).then((details) => {  
+
+                document.getElementById("check-details-name").innerHTML = `${details.name}`;
+                document.getElementById("check-details-symbol").innerHTML = `${details.symbol}`;
+                document.getElementById("check-details-address").innerHTML = `${address}`;
+                document.getElementById("check-details-owner").innerHTML = `${details.owner}`;
+                document.getElementById("check-details-issuer").innerHTML = `${details.issuer}`;
+        
+            }).catch((err) => {
+                console.log(err);
+            });
+        } else{
+            document.getElementById("check-fail").hidden  = false;
+        }
+    }).catch((err) => {
+        document.getElementById("check-fail").hidden  = false;
+        console.log(err);
+    })
+}

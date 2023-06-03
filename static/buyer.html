@@ -73,11 +73,61 @@
         </div>
 
         <hr />
-
+        
+        <!-- Check the validity of a HNFT -->
         <div class="row justify-content-center">
             <h2>Check validity</h2>
         </div>
         <div class="row justify-content-center">
+            <div class="col-sm-8">
+                <input type="text" placeholder="Enter th HNFT address here" name="check-validity" id="check-validity" class="form-control">
+            </div>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-info full-width-btn" onclick="checkHNFT()">Check validity</button>
+            </div>
+        </div> 
+
+        <div class="row justify-content-center" id="check-details">
+            <div class="col">
+                <div id="check-success" hidden>
+                    <div class="alert alert-success text-center" role="alert">
+                        The HNFT is trusted!
+                    </div>
+                    <h5>HNFT details</h5>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>Name</td>
+                                <td id="check-details-name">-</td>
+                            </tr>
+                            <tr>
+                                <td>Symbol</td>
+                                <td id="check-details-symbol">-</td>
+                            </tr>
+                            <tr>
+                                <td>Address</td>
+                                <td id="check-details-address">-</td>
+                            </tr>
+                            <tr>
+                                <td>Owner</td>
+                                <td id="check-details-owner">-</td>
+                            </tr>
+                            <tr>
+                                <td>Issuer</td>
+                                <td id="check-details-issuer">-</td>
+                            </tr>
+                        </tbody>
+                    </table>   
+                </div>
+                <div id="check-fail" hidden>
+                    <div class="alert alert-danger text-center" role="alert">
+                        Pay attention - The HNFT is NOT trusted! <br />
+                        The HNFT has not been issued by the Association.
+                    </div>
+                </div>
+                
+                
+            </div>
             
         </div>
           
