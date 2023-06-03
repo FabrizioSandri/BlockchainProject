@@ -178,9 +178,23 @@
     </div>
 
     <script>
+
         function refreshLists() {
             createInSellList();
+
+            if(connectedAddress){
+                // activate the disabled buttons
+                let disabledButtons = ["buy-button"];
+                disabledButtons.forEach((btn) => {
+                    document.getElementsByName(btn).forEach((elem) => {
+                        elem.disabled = false;
+                    })
+                });
+            }
         }
+
+        setInterval(refreshLists, 500);
+
         
     </script>
 

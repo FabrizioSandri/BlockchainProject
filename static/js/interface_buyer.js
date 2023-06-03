@@ -74,6 +74,7 @@ function createInSellHNFTCard(address, name, symbol, price) {
     // Create and append the Buy button element in the third row
     var buyButton = document.createElement("button");
     buyButton.type = "button";
+    buyButton.name = "buy-button";
     buyButton.className = "btn btn-success full-width-btn";
     buyButton.setAttribute("onclick", `buyHNFT("${address}", "${price}")`);
     buyButton.textContent = "Buy";
@@ -104,24 +105,36 @@ function showDetails(HNFTaddress) {
     });
 }
 
+
+previousDetailsSell = {};
 function createInSellList() {
     getInSellItems().then((inSell) => {
-        document.getElementById("sell-list").innerHTML = "";
+        let promises = []
+        inSell.forEach(HNFTaddress => {
+            promises.push(getNFTDetails(HNFTaddress));    
+        });
+
         if (!inSell || inSell.length==0){
             document.getElementById("sell-list").innerHTML = "No item in sell";
-        }else{
-            inSell.forEach(HNFTaddress => {
-                getNFTDetails(HNFTaddress).then((details) => {
-                    createInSellHNFTCard(HNFTaddress, details.name, details.symbol, details.price);
-                }).catch((err) => {
-                    console.log(err);
+        }
+        
+        Promise.all(promises).then((allDetails) => {
+            if (previousDetailsSell != JSON.stringify(allDetails)){
+                previousDetailsSell = JSON.stringify(allDetails);
+                document.getElementById("sell-list").innerHTML = "";
+                
+                allDetails.forEach(details => {
+                    createInSellHNFTCard(details.address, details.name, details.symbol, details.price);
                 });
-            });
-        }        
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
     }).catch((err) => {
         console.log("error: no item in sell");
     })
 }
+
 
 
 function buy(address) {
