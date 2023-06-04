@@ -62,14 +62,20 @@
 
     <div class="container">
         
-        
         <div class="row justify-content-center">
             <h2>In sell</h2>
         </div>
         <div class="row justify-content-center" id="sell-list">
+            <!-- Here goes the other cards -->    
+        </div>
 
-            <!-- Here goes the other cards -->
-            
+        <hr />
+
+        <div class="row justify-content-center">
+            <h2>HNFTs you buyed</h2>
+        </div>
+        <div class="row justify-content-center" id="bought-list">
+            <!-- Here goes the other cards -->    
         </div>
 
         <hr />
@@ -181,8 +187,10 @@
 
         function refreshLists() {
             createInSellList();
-
+            
             if(connectedAddress){
+                createBuyedList();
+
                 // activate the disabled buttons
                 let disabledButtons = ["buy-button"];
                 disabledButtons.forEach((btn) => {

@@ -180,7 +180,12 @@ function buyHNFT(NFTAddress, price) {
             method: 'eth_sendTransaction',
             params: [{ from: connectedAddress, to: mainSmartContractAddress, value: hexValue, data: fun }]
         }).then((res) => {
-            console.log("transazione buy andata a buon fine: ", res)
+            boughtNFTs.push(NFTAddress);
+
+            // store the new updated list in the cookies
+            setCookie('boughtNFTs', JSON.stringify(boughtNFTs), 365);
+            console.log("Buyed NFT: " + NFTAddress);
+
         }).catch(err => console.log("transazione buy error:", err))
 
     }).catch((err) => console.log(err));
