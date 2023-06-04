@@ -1,4 +1,4 @@
-let web3 = new Web3("http://127.0.0.1:7545");
+let web3 = new Web3(window.ethereum);
 
 var NFTCreated = [];    // list of HNFTs that are not in sell
 
