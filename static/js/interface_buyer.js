@@ -75,6 +75,7 @@ function createInSellHNFTCard(address, name, symbol, price) {
     var buyButton = document.createElement("button");
     buyButton.type = "button";
     buyButton.name = "buy-button";
+    buyButton.disabled = true;
     buyButton.className = "btn btn-success full-width-btn";
     buyButton.setAttribute("onclick", `buyHNFT("${address}", "${price}")`);
     buyButton.textContent = "Buy";
