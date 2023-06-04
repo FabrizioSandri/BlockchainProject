@@ -201,9 +201,11 @@
     <script>
         function refreshLists() {
             createInSellList();
-            createNotInSellList();
 
             if(connectedAddress){
+
+                createNotInSellList();
+                
                 // activate the disabled buttons
                 let disabledButtons = ["remove-from-market", "edit-price", "put-on-market"];
                 disabledButtons.forEach((btn) => {
