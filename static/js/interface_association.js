@@ -313,28 +313,27 @@ function createNotInSellList() {
     }else{
         NFTCreated = JSON.parse(NFTCreated);
 
-        let promises = []
-        NFTCreated.forEach(HNFTaddress => {
-            promises.push(getNFTDetails(HNFTaddress));    
-        });
-
-        Promise.all(promises).then((allDetails) => {
-            if (previousDetails != JSON.stringify(allDetails)){
-                previousDetails = JSON.stringify(allDetails);
-                document.getElementById("created-list").innerHTML = "";
-                addPlusButton();
-                
-                allDetails.forEach(details => {
-                    createNotInSellHNFTCard(details.address, details.name, details.symbol, details.price, details.issuer, details.approved);
-                });
-            }
-        }).catch((err) => {
-            console.log(err);
-        });        
-
     }
     
-}
+    let promises = []
+    NFTCreated.forEach(HNFTaddress => {
+        promises.push(getNFTDetails(HNFTaddress));    
+    });
+
+    Promise.all(promises).then((allDetails) => {
+        if (previousDetails != JSON.stringify(allDetails)){
+            previousDetails = JSON.stringify(allDetails);
+            document.getElementById("created-list").innerHTML = "";
+            addPlusButton();
+            
+            allDetails.forEach(details => {
+                createNotInSellHNFTCard(details.address, details.name, details.symbol, details.price, details.issuer, details.approved);
+            });
+        }
+    }).catch((err) => {
+        console.log(err);
+    });        
+}   
 
 
 
