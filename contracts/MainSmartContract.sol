@@ -111,10 +111,17 @@ contract MainSmartContract {
         (resb, res) = NFTAddress.call(
             abi.encodeWithSignature("_ownerof(uint256)", 0)
         );
+
+        require(
+            containsAddress(msg.sender, issuedItems),
+            "The item is not in the issued HNFT"
+        );
+
         require(
             abi.decode(res, (address)) == tx.origin,
             "the transaction origin caller is not the owner of the HNFT"
         );
+
         emit GetPhysicalHoney(
             NFTAddress,
             "Honey is physical requested from its owner",
