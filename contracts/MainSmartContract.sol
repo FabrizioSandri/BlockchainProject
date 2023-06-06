@@ -11,6 +11,13 @@ contract MainSmartContract {
     address[] private issuedItems;
     address[] private inSellItems;
 
+    // Modifier to check that the caller is the owner of
+    // the contract.
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the owner can run this function.");
+        _;
+    }
+    
     constructor() {
         owner = msg.sender;
     }
@@ -26,7 +33,7 @@ contract MainSmartContract {
     function sell(
         address NFTAddress,
         uint256 _price
-    ) external returns (bytes memory) {
+    ) external onlyOwner returns (bytes memory) {
         if (!containsAddress(NFTAddress, inSellItems)) {
             addNewInSellItem(NFTAddress);
             if (!containsAddress(NFTAddress, issuedItems))
@@ -42,7 +49,7 @@ contract MainSmartContract {
     function setPrice(
         address NFTAddress,
         uint256 _price
-    ) external returns (bool) {
+    ) external onlyOWner returns (bool) {
         (bool resb, ) = NFTAddress.call(
             abi.encodeWithSignature("setPrice(uint256)", _price)
         );
@@ -85,7 +92,7 @@ contract MainSmartContract {
         return false;
     }
 
-    function removeInSellItem(address NFTAddress) external {
+    function removeInSellItem(address NFTAddress) external onlyOwner {
         if (!removeElement(inSellItems, NFTAddress)) {
             revert("The NFT does not exists in the sell market");
         }
