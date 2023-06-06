@@ -2,6 +2,7 @@
 pragma solidity ^0.8.13;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+
 //add for debugging purpuse
 //import "truffle/console.sol";
 
@@ -32,7 +33,7 @@ contract HNFT is ERC721 {
         );
         require(
             _isApprovedOrOwner(msg.sender, 0),
-            "The transaction origin caller is not allowed to perform this action"
+            "The transaction caller is not allowed to perform this action"
         );
         price = _price;
         return true;
@@ -41,13 +42,19 @@ contract HNFT is ERC721 {
     function transferBuy(address from, address to) public {
         require(
             _isApprovedOrOwner(msg.sender, 0),
-            "The transaction origin caller is not allowed to perform this action"
+            "The transaction caller is not allowed to perform this action"
         );
         super.transferFrom(from, to, 0);
     }
 
-    function burn() public {
-        _isApprovedOrOwner(tx.origin, 0);
-        super._burn(0);
+    function burn(address mainSmartContractAddress) public {
+        require(
+            _isApprovedOrOwner(tx.origin, 0),
+            "The transaction origin caller is not allowed to perform this action"
+        );
+        (bool resb, ) = mainSmartContractAddress.call(abi.encodeWithSignature("burn()"));
+        if (resb) {
+            super._burn(0);
+        }
     }
 }
