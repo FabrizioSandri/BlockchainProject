@@ -52,9 +52,13 @@ contract HNFT is ERC721 {
             _isApprovedOrOwner(tx.origin, 0),
             "The transaction origin caller is not allowed to perform this action"
         );
-        (bool resb, ) = mainSmartContractAddress.call(abi.encodeWithSignature("burn()"));
+        (bool resb, ) = mainSmartContractAddress.call(
+            abi.encodeWithSignature("burn()")
+        );
         if (resb) {
             super._burn(0);
+        } else {
+            revert("error in main smart contract burn");
         }
     }
 }
