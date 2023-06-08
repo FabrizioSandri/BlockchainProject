@@ -138,6 +138,21 @@
             </div>
             
         </div>
+
+        <hr />
+        
+        <!-- Request the physical HNFT -->
+        <div class="row justify-content-center">
+            <h2>Request your physical honey</h2>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-sm-8">
+                <input type="text" placeholder="Enter th HNFT address here" name="request-hnft" id="request-hnft" class="form-control">
+            </div>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-success full-width-btn" onclick="getRealHoney()">Confirm</button>
+            </div>
+        </div> 
           
     </div>
 
@@ -207,6 +222,23 @@
         </div>
         </div>
     </div>
+
+    <!-- Modal getRealHoney -->
+    <div id="get-real-honey-result" class="modal fade">
+        <div class="modal-dialog modal-confirm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">			
+                    <h5 class="modal-title">Awesome!</h5>	
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">Your honey delivery request has been received and will be fulfilled promptly.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>  
 
     <script>
 

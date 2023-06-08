@@ -361,6 +361,41 @@ function approveNFT(NFTAddress) {
     })
 }
 
+/**
+ * Get the real honey 
+ */
+function getRealHoney() {
+    let NFTAddress = document.getElementById("request-hnft").value;
+    const contract = new web3.eth.Contract(hnftContractInfo.abi, NFTAddress);
+
+    // approve the mainSmartContract
+    let fun = contract.methods.burn(mainSmartContractAddress).encodeABI();
+    window.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [{ from: connectedAddress, to: NFTAddress, data: fun }]
+    }).then((transactionHash) => {
+        waitForConfirmation(transactionHash).then((receipt) => {
+            if (receipt) {
+                // update the lists of bought NFTs
+                var index = boughtNFTs.indexOf(NFTAddress);
+                if (index !== -1) {
+                    boughtNFTs.splice(index, 1);
+                }
+
+                // store the new updated list in the cookies
+                setCookie('boughtNFTs', JSON.stringify(boughtNFTs), 365);
+                createBoughtHNFTCard();
+
+                $('#get-real-honey-result').modal('show');
+            }
+        }).catch((error) => {
+            console.error('Error retrieving transaction receipt:', error);
+        });
+    }).catch((err) => {
+        transactionFail(err);
+    })
+}
+
 function isAssociationApproved(NFTAddress) {
 
     return new Promise((resolve, reject) => {
