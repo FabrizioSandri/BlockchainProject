@@ -109,7 +109,7 @@ contract MainSmartContract {
         bytes memory res;
         address NFTAddress = msg.sender;
         (resb, res) = NFTAddress.call(
-            abi.encodeWithSignature("_ownerof(uint256)", 0)
+            abi.encodeWithSignature("ownerOf(uint256)", 0)
         );
 
         require(
