@@ -46,6 +46,18 @@ getContractInfo("MainSmartContract").then((res) => {
 })
 
 
+/**
+ * Parse the error message from metamask and shows the result
+ */
+function transactionFail(errorMsg) {
+
+    errorMsg = errorMsg.message.replace("[ethjs-query] while formatting outputs from RPC '", '').slice(0, -1);
+    let parsedErrorMessage = JSON.parse(errorMsg);
+    document.getElementById("transaction-fail-reason").innerHTML = parsedErrorMessage.value.data.data.message;
+    document.getElementById("transaction-fail-message").innerHTML = parsedErrorMessage.value.data.data.reason;
+
+    $('#transaction-fail').modal('show');
+}
 
 /**
  * The following two functions waits for a transaction to be mined
@@ -186,7 +198,9 @@ function buyHNFT(NFTAddress, price) {
 
         }).catch(err => console.log("transazione buy error:", err))
 
-    }).catch((err) => console.log(err));
+    }).catch((err) => {
+        transactionFail(err);
+    })
 }
 
 /**
@@ -200,8 +214,7 @@ function setPrice(NFTAddress) {
     window.ethereum.request({
         method: 'eth_sendTransaction',
         params: [{ from: connectedAddress, to: mainSmartContractAddress, data: fun }]
-    })
-    .then((transactionHash) => {
+    }).then((transactionHash) => {
         waitForConfirmation(transactionHash).then((receipt) => {
             
             createInSellList();
@@ -210,8 +223,9 @@ function setPrice(NFTAddress) {
         }).catch((error) => {
             console.error('Error retrieving transaction receipt:', error);
         });
+    }).catch((err) => {
+        transactionFail(err);
     })
-    .catch(err => console.log("transazione setprice error:", err))
 }
 
 /**
@@ -247,7 +261,9 @@ function burnToken(NFTAddress) {
         }).catch((error) => {
             console.error('Error retrieving transaction receipt:', error);
         });
-    }).catch(err => console.log("error trans", err))
+    }).catch((err) => {
+        transactionFail(err);
+    })
 }
 
 
@@ -263,8 +279,7 @@ function putOnMarket(NFTAddress) {
     window.ethereum.request({
         method: 'eth_sendTransaction',
         params: [{ from: connectedAddress, to: mainSmartContractAddress, data: fun }]
-    })
-    .then((transactionHash) => {
+    }).then((transactionHash) => {
         waitForConfirmation(transactionHash).then((receipt) => {
 
             console.log(receipt)
@@ -282,8 +297,9 @@ function putOnMarket(NFTAddress) {
         }).catch((error) => {
             console.error('Error retrieving transaction receipt:', error);
         });
+    }).catch((err) => {
+        transactionFail(err);
     })
-    .catch(err => console.log("transazione setprice error:", err))
 }
 
 
@@ -316,8 +332,9 @@ function removeFromMarket(NFTAddress) {
             console.error('Error retrieving transaction receipt:', error);
         });
 
+    }).catch((err) => {
+        transactionFail(err);
     })
-    .catch(err => console.log("transazione setprice error:", err))
 }
 
 /**
@@ -339,7 +356,9 @@ function approveNFT(NFTAddress) {
         }).catch((error) => {
             console.error('Error retrieving transaction receipt:', error);
         });
-    }).catch(err => console.log("error approve", err))
+    }).catch((err) => {
+        transactionFail(err);
+    })
 }
 
 function isAssociationApproved(NFTAddress) {
@@ -357,7 +376,9 @@ function isAssociationApproved(NFTAddress) {
             }else{
                 resolve(false);
             }
-        }).catch(err => console.log("error trans", err))
+        }).catch((err) => {
+            transactionFail(err);
+        })
 
     });
 }
