@@ -24,3 +24,7 @@
 .address {
   color: rgba(255,255,255,.7);
 }
+
+.modal-body {
+  overflow-x: auto;
+}

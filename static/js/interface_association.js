@@ -267,6 +267,8 @@ function showDetails(HNFTaddress) {
         document.getElementById("details-owner").innerHTML = `${details.owner}`;
         document.getElementById("details-issuer").innerHTML = `${details.issuer}`;
 
+        createQRCode(HNFTaddress);
+        
     }).catch((err) => {
         console.log(err);
     });
