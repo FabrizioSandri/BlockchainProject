@@ -1,4 +1,4 @@
-function createInSellHNFTCard(address, name, symbol, price) {
+function createInSellHNFTCard(address, name, symbol, price, image="images/hnft.png") {
     // Create the main row container
     var rowDiv = document.createElement("div");
     rowDiv.className = "row justify-content-center";
@@ -12,7 +12,7 @@ function createInSellHNFTCard(address, name, symbol, price) {
     // Create and append the image element
     var img = document.createElement("img");
     img.className = "card-img-top";
-    img.setAttribute("src", "images/honey.jpg");
+    img.setAttribute("src", image);
     cardDiv.appendChild(img);
 
     // Create the card body container
@@ -89,7 +89,7 @@ function createInSellHNFTCard(address, name, symbol, price) {
 
 
 
-function createBoughtHNFTCard(address, name, symbol, owned) {
+function createBoughtHNFTCard(address, name, symbol, owned, image="images/hnft.png") {
     // Create the main row container
     var rowDiv = document.createElement("div");
     rowDiv.className = "row justify-content-center";
@@ -103,7 +103,7 @@ function createBoughtHNFTCard(address, name, symbol, owned) {
     // Create and append the image element
     var img = document.createElement("img");
     img.className = "card-img-top";
-    img.setAttribute("src", "images/honey.jpg");
+    img.setAttribute("src", image);
     cardDiv.appendChild(img);
 
     // Create the card body container
@@ -171,6 +171,7 @@ function showDetails(HNFTaddress) {
         document.getElementById("details-price").innerHTML = `${details.price} ETH`;
         document.getElementById("details-owner").innerHTML = `${details.owner}`;
         document.getElementById("details-issuer").innerHTML = `${details.issuer}`;
+        document.getElementById("details-description").innerHTML = `${details.description}`;
 
         createQRCode(HNFTaddress);
 
@@ -198,7 +199,7 @@ function createInSellList() {
                 document.getElementById("sell-list").innerHTML = "";
                 
                 allDetails.forEach(details => {
-                    createInSellHNFTCard(details.address, details.name, details.symbol, details.price);
+                    createInSellHNFTCard(details.address, details.name, details.symbol, details.price, details.image);
                 });
             }
         }).catch((err) => {
@@ -230,7 +231,7 @@ function createBuyedList() {
                 document.getElementById("bought-list").innerHTML = "";
                 
                 allDetails.forEach(details => {
-                    createBoughtHNFTCard(details.address, details.name, details.symbol, details.owner == connectedAddress);
+                    createBoughtHNFTCard(details.address, details.name, details.symbol, details.owner == connectedAddress, details.image);
                 });
             }
         }).catch((err) => {

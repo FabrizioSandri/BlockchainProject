@@ -133,19 +133,19 @@ function checkHNFTValidity(NFTAddress) {
 
 
 /**
- * Create a HNFT
+ * Create a HNFT with the specified token URI
  */
-function createHNFT() {
+function createHNFT(tokenUri) {
     let nameNFT = document.getElementById("name-new").value;
     let symbolNFT = document.getElementById("symbol-new").value;
 
     let deploymentPayload = {
         from: connectedAddress, // Replace with your MetaMask address
         data: hnftContractInfo.bytecode,
-        arguments: [nameNFT, symbolNFT]
+        arguments: [nameNFT, symbolNFT, tokenUri]
     };
 
-    let encodedArguments = web3.eth.abi.encodeParameters(['string', 'string'], deploymentPayload.arguments).substring(2);
+    let encodedArguments = web3.eth.abi.encodeParameters(['string', 'string', 'string'], deploymentPayload.arguments).substring(2);
     ethereum.request({
         method: 'eth_sendTransaction',
         params: [{
@@ -512,6 +512,34 @@ function getSymbol(NFTAddress) {
     });
 }
 
+function getMetadata(NFTAddress) {
+    return new Promise((resolve, reject) => {
+        const contract = new web3.eth.Contract(hnftContractInfo.abi, NFTAddress);
+
+        let fun = contract.methods.tokenURI(0).encodeABI();
+        window.ethereum.request({
+            method: 'eth_call',
+            params: [{ from: connectedAddress, to: NFTAddress, data: fun }]
+        }).then((res) => {
+            const tokenURI = web3.eth.abi.decodeParameter('string', res);
+
+            /* Gets the contract metadata from the uri */
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    resolve(JSON.parse(this.responseText));
+                } else if (this.readyState == 4 && this.status != 200) {
+                    reject("Unable to fetch the metadata information of the HNFT.");
+                }
+            }
+
+            xhttp.open("GET", `${tokenURI}`, true);
+            xhttp.send();
+
+        }).catch(err => reject(err))
+    });
+}
+
 
 /**
  * Get the NFT details
@@ -525,14 +553,20 @@ function getNFTDetails(HNFTaddress) {
                     getOwner(HNFTaddress).then((owner) => {
                         getIssuer(HNFTaddress).then((issuer) => {
                             isAssociationApproved(HNFTaddress).then((approved) => {
-                                resolve({
-                                    name: name,
-                                    symbol: symbol,
-                                    address: HNFTaddress,
-                                    price: price,
-                                    owner: owner,
-                                    issuer: issuer,
-                                    approved: approved
+                                getMetadata(HNFTaddress).then((metadataInfo) => {
+                                    resolve({
+                                        name: name,
+                                        symbol: symbol,
+                                        address: HNFTaddress,
+                                        price: price,
+                                        owner: owner,
+                                        issuer: issuer,
+                                        approved: approved,
+                                        description: metadataInfo.description,
+                                        image: metadataInfo.image
+                                    });
+                                }).catch((err) => {
+                                    reject("error [getMetadata] : " + err);
                                 });
                             }).catch((err) => {
                                 reject("error [isAssociationApproved] : " + err);

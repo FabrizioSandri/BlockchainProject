@@ -28,3 +28,7 @@
 .modal-body {
   overflow-x: auto;
 }
+
+.card-img-top {
+  padding: 1em;
+}

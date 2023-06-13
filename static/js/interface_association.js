@@ -1,4 +1,4 @@
-function createInSellHNFTCard(address, name, symbol, price) {
+function createInSellHNFTCard(address, name, symbol, price, image="images/hnft.png") {
     // Create the main card container
     var cardDiv = document.createElement("div");
     cardDiv.id = address;
@@ -7,7 +7,7 @@ function createInSellHNFTCard(address, name, symbol, price) {
     // Create and append the image element
     var img = document.createElement("img");
     img.className = "card-img-top";
-    img.setAttribute("src", "images/honey.jpg");
+    img.setAttribute("src", image);
     cardDiv.appendChild(img);
 
     // Create the card body container
@@ -127,7 +127,7 @@ function addPlusButton() {
     
 }
 
-function createNotInSellHNFTCard(address, name, symbol, price, issuer="-", approved_status=false) {
+function createNotInSellHNFTCard(address, name, symbol, price, issuer="-", approved_status=false, image="images/hnft.png") {
     // Create the main card container
     var cardDiv = document.createElement("div");
     cardDiv.id = address;
@@ -136,7 +136,7 @@ function createNotInSellHNFTCard(address, name, symbol, price, issuer="-", appro
     // Create and append the image element
     var img = document.createElement("img");
     img.className = "card-img-top";
-    img.setAttribute("src", "images/honey.jpg");
+    img.setAttribute("src", image);
     cardDiv.appendChild(img);
 
     // Create the card body container
@@ -266,6 +266,7 @@ function showDetails(HNFTaddress) {
         document.getElementById("details-price").innerHTML = `${details.price} ETH`;
         document.getElementById("details-owner").innerHTML = `${details.owner}`;
         document.getElementById("details-issuer").innerHTML = `${details.issuer}`;
+        document.getElementById("details-description").innerHTML = `${details.description}`;
 
         createQRCode(HNFTaddress);
         
@@ -293,7 +294,7 @@ function createInSellList() {
                 document.getElementById("sell-list").innerHTML = "";
                 
                 allDetails.forEach(details => {
-                    createInSellHNFTCard(details.address, details.name, details.symbol, details.price);
+                    createInSellHNFTCard(details.address, details.name, details.symbol, details.price, details.image);
                 });
             }
         }).catch((err) => {
@@ -329,7 +330,7 @@ function createNotInSellList() {
             addPlusButton();
             
             allDetails.forEach(details => {
-                createNotInSellHNFTCard(details.address, details.name, details.symbol, details.price, details.issuer, details.approved);
+                createNotInSellHNFTCard(details.address, details.name, details.symbol, details.price, details.issuer, details.approved, details.image);
             });
         }
     }).catch((err) => {
@@ -337,5 +338,76 @@ function createNotInSellList() {
     });        
 }   
 
+/**
+ * Uploads the HNFT image to IPFS
+ */
+function uploadImage() {
+    return new Promise((resolve, reject) => {
 
+        let hnftImage = document.getElementById("image-new").files[0];
 
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                resolve(JSON.parse(this.responseText));
+            } else if (this.readyState == 4 && this.status != 200) {
+                reject("Unable to upload the image file.");
+            }
+        }
+
+        var formData = new FormData();
+        formData.append("image", hnftImage);
+
+        xhttp.open("POST", `/ipfsUploadImage`, true);
+        xhttp.send(formData);
+    });
+}
+
+/**
+ * Uploads the HNFT metadata file to IPFS
+ */
+function uploadMetadata() {
+    return new Promise((resolve, reject) => {
+        
+        // after uploading the image, upload the full metadata
+        uploadImage().then((response) => {
+            // metadata file
+            let name = document.getElementById("name-new").value;
+            let description = document.getElementById("description-new").value;
+    
+            // upload the metadata file
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    resolve(JSON.parse(this.responseText));
+                } else if (this.readyState == 4 && this.status != 200) {
+                    reject("Unable to upload the image file.");
+                }
+            }
+
+            var formData = new FormData();
+            formData.append("name", name);
+            formData.append("description", description);
+            formData.append("image", `https://honey-nft.infura-ipfs.io/ipfs/${response["Hash"]}`);
+
+            xhttp.open("POST", `/ipfsUploadMetadata`, true);
+            xhttp.send(formData);
+
+        }).catch((err) => {
+            reject(err);
+        });       
+
+    });
+}
+
+/**
+ * Creates an HNFT with some metadata
+ */
+function createHNFTWithMetadata() {
+    uploadMetadata().then((uploadedResult) => {
+        let metadataFile = `https://honey-nft.infura-ipfs.io/ipfs/${uploadedResult["Hash"]}`
+        createHNFT(metadataFile);
+    }).catch((err) => {
+        console.error(err);
+    });     
+}
