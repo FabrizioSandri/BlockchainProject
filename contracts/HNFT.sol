@@ -2,20 +2,23 @@
 pragma solidity ^0.8.13;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 //add for debugging purpuse
 //import "truffle/console.sol";
 
-contract HNFT is ERC721 {
+contract HNFT is ERC721URIStorage {
     uint price;
     address issuer;
 
     constructor(
         string memory _name,
-        string memory _symbol
+        string memory _symbol,
+        string memory tokenURI
     ) ERC721(_name, _symbol) {
         issuer = msg.sender;
         _safeMint(msg.sender, 0);
+        _setTokenURI(0, tokenURI);
     }
 
     function getIssuer() external view returns (address) {
