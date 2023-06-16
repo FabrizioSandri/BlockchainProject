@@ -16,12 +16,12 @@ contract("MainSmartContract/HNFT tests", (accounts) => {
     });
 
     it("trying to burn a token not on the market", async () => {
-        let randomAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
         let issuer = accounts[1];
         try {
             let HNFTInstance = await HNFTContract.new("TEST", "TST", "TEST_URI", { from: issuer });
             const mainSmartContractInstance = await mainSmartContract.deployed();
             let res = await HNFTInstance.burn(mainSmartContractInstance.address, { from: issuer });
+            assert.fail("an error should be thrown");
         } catch (err) {
             //should retorn error since HNFT is not in sell 
             assert(err.message.includes("error in main smart contract burn"), "Unexpected error message");
@@ -52,11 +52,10 @@ contract("MainSmartContract/HNFT tests", (accounts) => {
             const mainSmartContractInstance = await mainSmartContract.deployed();
             let HNFTInstance = await HNFTContract.new("TEST", "TST", "TEST_URI", { from: issuer });
             // Attempt to set Price from MainSmartContract without approval
-            let res = await mainSmartContractInstance.setPrice(HNFTInstance.address, value);
-            ("error: ", res);
+            let res = await HNFTInstance.setPrice(value);
             assert.fail("an error should be thrown");
         } catch (error) {
-            assert(error.message.includes("error in set Price"), "Unexpected error message");
+            assert(error.message.includes("The transaction caller is not allowed to perform this action"), "Unexpected error message");
         }
     });
 
@@ -141,7 +140,6 @@ contract("MainSmartContract/HNFT tests", (accounts) => {
             let newOwner = await HNFTInstance.ownerOf(0);
             assert.equal(newOwner, buyer, "the main smart contract could not do the transfer");
         } catch (error) {
-            (error.toString());
             assert.fail("got an unexpected error: ");
         }
     });
