@@ -267,6 +267,7 @@ function checkHNFT() {
                 document.getElementById("check-details-address").innerHTML = `${address}`;
                 document.getElementById("check-details-owner").innerHTML = `${details.owner}`;
                 document.getElementById("check-details-issuer").innerHTML = `${details.issuer}`;
+                document.getElementById("check-details-description").innerHTML = `${details.description}`;
         
             }).catch((err) => {
                 console.log(err);
