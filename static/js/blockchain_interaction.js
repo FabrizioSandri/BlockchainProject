@@ -154,7 +154,6 @@ function createHNFT(tokenUri) {
         }],
     }).then((transactionHash) => {
         waitForConfirmation(transactionHash).then((receipt) => {
-            console.log(receipt)
             if (receipt && receipt.contractAddress) {
                 console.log('address deployed: ', receipt.contractAddress);
                 NFTCreated.push(receipt.contractAddress);
@@ -208,12 +207,12 @@ function buyHNFT(NFTAddress, price) {
  */
 function setPrice(NFTAddress) {
     let price = document.getElementById("change-price").value;
-    const contract = new web3.eth.Contract(mainContractInfo.abi, mainSmartContractAddress);
+    const contract = new web3.eth.Contract(hnftContractInfo.abi, NFTAddress);
 
-    let fun = contract.methods.setPrice(NFTAddress, price).encodeABI();
+    let fun = contract.methods.setPrice(price).encodeABI();
     window.ethereum.request({
         method: 'eth_sendTransaction',
-        params: [{ from: connectedAddress, to: mainSmartContractAddress, data: fun }]
+        params: [{ from: connectedAddress, to: NFTAddress, data: fun }]
     }).then((transactionHash) => {
         waitForConfirmation(transactionHash).then((receipt) => {
             
@@ -227,46 +226,6 @@ function setPrice(NFTAddress) {
         transactionFail(err);
     })
 }
-
-/**
- * Burn the token
- */
-function burnToken(NFTAddress) {
-
-    const contract = new web3.eth.Contract(mainContractInfo.abi, mainSmartContractAddress);
-
-    let fun = contract.methods.burn(NFTAddress).encodeABI();
-    window.ethereum.request({
-        method: 'eth_sendTransaction',
-        params: [{ from: connectedAddress, to: mainSmartContractAddress, data: fun }]
-    }).then((transactionHash) => {
-
-        const returnStatus = web3.eth.abi.decodeParameter("bool", transactionHash);
-        waitForConfirmation(transactionHash).then((receipt) => {
-            console.log(receipt)
-            if (returnStatus == true){
-                // update the lists of NFTs
-                var index = NFTCreated.indexOf(NFTAddress);
-                if (index !== -1) {
-                    NFTCreated.splice(index, 1);
-                }
-
-                // store the new updated list in the cookies
-                setCookie('createdNFTs', JSON.stringify(NFTCreated), 365);
-                createInSellList();
-                createNotInSellList();
-
-            }
-
-        }).catch((error) => {
-            console.error('Error retrieving transaction receipt:', error);
-        });
-    }).catch((err) => {
-        transactionFail(err);
-    })
-}
-
-
 
 /**
  * Put the HNFT on the market
@@ -376,6 +335,7 @@ function getRealHoney() {
     }).then((transactionHash) => {
         waitForConfirmation(transactionHash).then((receipt) => {
             if (receipt) {
+                // TODO: check that the function did not revert
                 // update the lists of bought NFTs
                 var index = boughtNFTs.indexOf(NFTAddress);
                 if (index !== -1) {
