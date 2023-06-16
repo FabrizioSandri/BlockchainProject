@@ -45,30 +45,36 @@ contract MainSmartContract {
                 addNewIssuedItem(NFTAddress);
         }
 
-        (, bytes memory res) = NFTAddress.call(
+        (bool resb, bytes memory res) = NFTAddress.call(
             abi.encodeWithSignature("setPrice(uint256)", _price)
         );
+        if (!resb) {
+            revert("error in setPrice Calling");
+        }
         return res;
     }
 
     function buy(address NFTAddress, address ownerOfNft) external payable {
-        (, bytes memory res) = NFTAddress.call(
+        (bool resb, bytes memory res) = NFTAddress.call(
             abi.encodeWithSignature("getPrice()")
         );
+        if (!resb) {
+            revert("error in getting the price");
+        }
         uint256 price = abi.decode(res, (uint));
         require(msg.value == price * 1 ether, "not enough value provided");
 
         address payable _owner = payable(ownerOfNft);
         _owner.transfer(msg.value);
 
-        (bool resb, ) = NFTAddress.call(
+        (bool resb1, ) = NFTAddress.call(
             abi.encodeWithSignature(
                 "transferBuy(address,address)",
                 ownerOfNft,
                 msg.sender
             )
         );
-        if (!resb) {
+        if (!resb1) {
             revert("The NFT was not transfered");
         }
         if (!removeElement(inSellItems, NFTAddress)) {
@@ -77,10 +83,7 @@ contract MainSmartContract {
     }
 
     function CheckValidity(address NFTAddress) external view returns (bool) {
-        if (containsAddress(NFTAddress, issuedItems)) {
-            return true;
-        }
-        return false;
+        return containsAddress(NFTAddress, issuedItems);
     }
 
     function removeInSellItem(address NFTAddress) external onlyOwner {
