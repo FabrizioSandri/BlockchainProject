@@ -7,7 +7,7 @@ contract("MainSmartContract/HNFT tests", (accounts) => {
     it("HNFT issuer should be the creator of the HNFT it self", async () => {
         let issuer = accounts[1];
         try {
-            let HNFTInstance = await HNFTContract.new("TEST", "TST", { from: issuer });
+            let HNFTInstance = await HNFTContract.new("TEST", "TST", "TEST_URI", { from: issuer });
             let res = await HNFTInstance.getIssuer();
             assert.equal(issuer, res, "error the creator is not the issuer");
         } catch (error) {
@@ -19,7 +19,7 @@ contract("MainSmartContract/HNFT tests", (accounts) => {
         let randomAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
         let issuer = accounts[1];
         try {
-            let HNFTInstance = await HNFTContract.new("TEST", "TST", { from: issuer });
+            let HNFTInstance = await HNFTContract.new("TEST", "TST", "TEST_URI", { from: issuer });
             const mainSmartContractInstance = await mainSmartContract.deployed();
             let res = await HNFTInstance.burn(mainSmartContractInstance.address, { from: issuer });
         } catch (err) {
@@ -34,7 +34,7 @@ contract("MainSmartContract/HNFT tests", (accounts) => {
         try {
             const mainSmartContractInstance = await mainSmartContract.deployed();
             const mainSmartContractAddress = mainSmartContractInstance.address;
-            let HNFTInstance = await HNFTContract.new("TEST", "TST", { from: issuer });
+            let HNFTInstance = await HNFTContract.new("TEST", "TST", "TEST_URI", { from: issuer });
             // check validity of an HNFT
             let res = await HNFTInstance.approve(mainSmartContractAddress, 0, { from: issuer });
             res = await mainSmartContractInstance.sell(HNFTInstance.address, value);
@@ -50,7 +50,7 @@ contract("MainSmartContract/HNFT tests", (accounts) => {
         let value = 3;
         try {
             const mainSmartContractInstance = await mainSmartContract.deployed();
-            let HNFTInstance = await HNFTContract.new("TEST", "TST", { from: issuer });
+            let HNFTInstance = await HNFTContract.new("TEST", "TST", "TEST_URI", { from: issuer });
             // Attempt to set Price from MainSmartContract without approval
             let res = await mainSmartContractInstance.setPrice(HNFTInstance.address, value);
             ("error: ", res);
@@ -67,7 +67,7 @@ contract("MainSmartContract/HNFT tests", (accounts) => {
         try {
             const mainSmartContractInstance = await mainSmartContract.deployed();
             const mainSmartContractAddress = mainSmartContractInstance.address;
-            let HNFTInstance = await HNFTContract.new("TEST", "TST", { from: issuer });
+            let HNFTInstance = await HNFTContract.new("TEST", "TST", "TEST_URI", { from: issuer });
             // Attempt remove a random address that is not in the market
             let res = await HNFTInstance.approve(mainSmartContractAddress, 0, { from: issuer });
             res = await mainSmartContractInstance.sell(HNFTInstance.address, value);
@@ -85,7 +85,7 @@ contract("MainSmartContract/HNFT tests", (accounts) => {
         try {
             const mainSmartContractInstance = await mainSmartContract.deployed();
             const mainSmartContractAddress = mainSmartContractInstance.address;
-            let HNFTInstance = await HNFTContract.new("TEST", "TST", { from: issuer });
+            let HNFTInstance = await HNFTContract.new("TEST", "TST", "TEST_URI", { from: issuer });
             // Attempt remove aN HNFT address not being the owner of MainSmartContract
             let res = await HNFTInstance.approve(mainSmartContractAddress, 0, { from: issuer });
             res = await mainSmartContractInstance.sell(HNFTInstance.address, value);
@@ -102,7 +102,7 @@ contract("MainSmartContract/HNFT tests", (accounts) => {
         let value = 0;
         try {
             const mainSmartContractInstance = await mainSmartContract.deployed();
-            let HNFTInstance = await HNFTContract.new("TEST", "TST");
+            let HNFTInstance = await HNFTContract.new("TEST", "TST", "TEST_URI");
             // Attempt to transfer HNFT without approval
             let owner = await HNFTInstance.ownerOf(0);
             //Convert int to wei
@@ -123,7 +123,7 @@ contract("MainSmartContract/HNFT tests", (accounts) => {
         try {
             const mainSmartContractInstance = await mainSmartContract.deployed();
             let mainSmartContractAddress = mainSmartContractInstance.address;
-            let HNFTInstance = await HNFTContract.new("TEST", "TST");
+            let HNFTInstance = await HNFTContract.new("TEST", "TST", "TEST_URI");
             // Attempt to transfer HNFT with approval
             let res = await HNFTInstance.approve(mainSmartContractAddress, 0);
             let owner = await HNFTInstance.ownerOf(0);
