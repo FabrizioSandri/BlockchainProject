@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 contract HNFT is ERC721URIStorage {
     uint price;
     address issuer;
-    modifier onlyApproved() {
+    modifier ownerOrApproved() {
         require(
             _isApprovedOrOwner(msg.sender, 0),
             "The transaction caller is not allowed to perform this action"
@@ -36,16 +36,16 @@ contract HNFT is ERC721URIStorage {
         return price;
     }
 
-    function setPrice(uint _price) external onlyApproved returns (bool) {
+    function setPrice(uint _price) external ownerOrApproved returns (bool) {
         price = _price;
         return true;
     }
 
-    function transferBuy(address from, address to) external onlyApproved {
+    function transferBuy(address from, address to) external ownerOrApproved {
         super.transferFrom(from, to, 0);
     }
 
-    function burn(address mainSmartContractAddress) external onlyApproved {
+    function burn(address mainSmartContractAddress) external ownerOrApproved {
         (bool resb, ) = mainSmartContractAddress.call(
             abi.encodeWithSignature("getRealHoney()")
         );
