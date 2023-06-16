@@ -51,20 +51,6 @@ contract MainSmartContract {
         return res;
     }
 
-    function setPrice(
-        address NFTAddress,
-        uint256 _price
-    ) external onlyOwner returns (bool) {
-        (bool resb, ) = NFTAddress.call(
-            abi.encodeWithSignature("setPrice(uint256)", _price)
-        );
-        if (!resb) {
-            revert("error in set Price");
-        } else {
-            return true;
-        }
-    }
-
     function buy(address NFTAddress, address ownerOfNft) external payable {
         (, bytes memory res) = NFTAddress.call(
             abi.encodeWithSignature("getPrice()")
@@ -103,23 +89,12 @@ contract MainSmartContract {
         }
     }
 
-    function burn() external returns (bool) {
-        //change name to getRealHoney
-        bool resb;
-        bytes memory res;
+    function getRealHoney() external returns (bool) {
         address NFTAddress = msg.sender;
-        (resb, res) = NFTAddress.call(
-            abi.encodeWithSignature("ownerOf(uint256)", 0)
-        );
 
         require(
             containsAddress(msg.sender, issuedItems),
             "The item is not in the issued HNFT"
-        );
-
-        require(
-            abi.decode(res, (address)) == tx.origin,
-            "the transaction origin caller is not the owner of the HNFT"
         );
 
         emit GetPhysicalHoney(
@@ -130,6 +105,7 @@ contract MainSmartContract {
         return true;
     }
 
+    /* Internal functions */
     function addNewInSellItem(address newItem) internal {
         inSellItems.push(newItem);
     }

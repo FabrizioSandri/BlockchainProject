@@ -31,10 +31,6 @@ contract HNFT is ERC721URIStorage {
 
     function setPrice(uint _price) public returns (bool) {
         require(
-            _isApprovedOrOwner(tx.origin, 0),
-            "The transaction origin caller is not allowed to perform this action"
-        );
-        require(
             _isApprovedOrOwner(msg.sender, 0),
             "The transaction caller is not allowed to perform this action"
         );
@@ -52,11 +48,11 @@ contract HNFT is ERC721URIStorage {
 
     function burn(address mainSmartContractAddress) public {
         require(
-            _isApprovedOrOwner(tx.origin, 0),
-            "The transaction origin caller is not allowed to perform this action"
+            _isApprovedOrOwner(msg.sender, 0),
+            "The transaction caller is not allowed to perform this action"
         );
         (bool resb, ) = mainSmartContractAddress.call(
-            abi.encodeWithSignature("burn()")
+            abi.encodeWithSignature("getRealHoney()")
         );
         if (resb) {
             super._burn(0);
