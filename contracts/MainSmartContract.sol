@@ -82,7 +82,7 @@ contract MainSmartContract {
         }
     }
 
-    function CheckValidity(address NFTAddress) external view returns (bool) {
+    function checkValidity(address NFTAddress) external view returns (bool) {
         return containsAddress(NFTAddress, issuedItems);
     }
 

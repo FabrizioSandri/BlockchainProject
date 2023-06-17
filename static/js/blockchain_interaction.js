@@ -119,7 +119,7 @@ function checkHNFTValidity(NFTAddress) {
     return new Promise((resolve, reject) => {
         const contract = new web3.eth.Contract(mainContractInfo.abi, mainSmartContractAddress);
 
-        let fun = contract.methods.CheckValidity(NFTAddress).encodeABI();
+        let fun = contract.methods.checkValidity(NFTAddress).encodeABI();
 
         ethereum.request({
             method: 'eth_call',
@@ -127,7 +127,7 @@ function checkHNFTValidity(NFTAddress) {
         }).then((res) => {
             const decodedResult = web3.eth.abi.decodeParameter('bool', res);
             resolve(decodedResult);
-        }).catch(err => reject("CheckValidity error: " + err))
+        }).catch(err => reject("checkValidity error: " + err))
     });
 }
 
