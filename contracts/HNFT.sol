@@ -8,8 +8,9 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 //import "truffle/console.sol";
 
 contract HNFT is ERC721URIStorage {
-    uint price;
-    address issuer;
+    uint private price;
+    address private issuer;
+    
     modifier ownerOrApproved() {
         require(
             _isApprovedOrOwner(msg.sender, 0),
