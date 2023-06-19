@@ -61,8 +61,8 @@ contract MainSmartContract {
         if (!resb) {
             revert("error in getting the price");
         }
-        uint256 price = abi.decode(res, (uint));
-        require(msg.value == price * 1 ether, "not enough value provided");
+        uint256 price = abi.decode(res, (uint256));
+        require(msg.value == price, "not enough value provided");
 
         address payable _owner = payable(ownerOfNft);
         _owner.transfer(msg.value);
