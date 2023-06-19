@@ -209,7 +209,9 @@ function setPrice(NFTAddress) {
     let price = document.getElementById("change-price").value;
     const contract = new web3.eth.Contract(hnftContractInfo.abi, NFTAddress);
 
-    let fun = contract.methods.setPrice(price).encodeABI();
+    let weiPrice = web3.utils.toWei(price, 'ether'); // convert the price into wei
+
+    let fun = contract.methods.setPrice(weiPrice).encodeABI();
     window.ethereum.request({
         method: 'eth_sendTransaction',
         params: [{ from: connectedAddress, to: NFTAddress, data: fun }]
@@ -233,8 +235,9 @@ function setPrice(NFTAddress) {
 function putOnMarket(NFTAddress) {
     let price = document.getElementById("put-on-market-price").value;
     const contract = new web3.eth.Contract(mainContractInfo.abi, mainSmartContractAddress);
+    let weiPrice = web3.utils.toWei(price, 'ether'); // convert the price into wei
 
-    let fun = contract.methods.sell(NFTAddress, price).encodeABI();
+    let fun = contract.methods.sell(NFTAddress, weiPrice).encodeABI();
     window.ethereum.request({
         method: 'eth_sendTransaction',
         params: [{ from: connectedAddress, to: mainSmartContractAddress, data: fun }]
@@ -409,8 +412,9 @@ function getPrice(NFTAddress) {
             method: 'eth_call',
             params: [{ from: connectedAddress, to: NFTAddress, data: fun }]
         }).then((res) => {
-            const decodedResult = web3.eth.abi.decodeParameter('uint', res);
-            resolve(decodedResult);
+            const decodedResult = web3.eth.abi.decodeParameter('uint256', res);
+            let eth_price = web3.utils.fromWei(decodedResult, 'ether'); // from wei to ETH
+            resolve(eth_price);
         }).catch(err => console.log("error trans", err))
     });
 }
