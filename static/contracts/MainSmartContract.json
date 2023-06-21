@@ -13183,12 +13183,12 @@
     "11155111": {
       "events": {},
       "links": {},
-      "address": "0x48D255a17ef61736dCB0E37f9457B31A8093Fd2e",
-      "transactionHash": "0x740253d56ed160f05e0fa67e82717ec79d5b0d53195b97bb398c7b01a9e7fbf1"
+      "address": "0xE16E344Db811c49B3f6d12CC174136271d000Aee",
+      "transactionHash": "0xa30dea96c32addfcac49a12922feb9de0f781e96536995c41946f259824b1a78"
     }
   },
   "schemaVersion": "3.4.13",
-  "updatedAt": "2023-06-19T16:38:25.750Z",
+  "updatedAt": "2023-06-19T16:42:40.493Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

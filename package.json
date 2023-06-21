@@ -10,5 +10,11 @@
     "multer": "^1.4.5-lts.1",
     "npm": "^9.7.1",
     "web3": "^1.10.0"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "build": "truffle migrate --reset",
+    "test": "node test/testScript.js"
   }
+
 }
