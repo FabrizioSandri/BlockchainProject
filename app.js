@@ -12,8 +12,7 @@ let env;
 try {
   env = JSON.parse(fs.readFileSync('ENV.json', 'utf8'));
 } catch (err) {
-  console.error("ERROR: before running the application you should create the 'ENV.json'.");
-  process.exit()
+  console.error("NOTE: if you are running from the association perspective before running the application you should create the 'ENV.json'.");
 }
 
 
@@ -24,8 +23,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/', express.static('./static'));
 
-app.listen(env.local_server_port || 3000, function () {
-    console.log('Server running on port ', env.local_server_port || 3000);
+app.listen(3000, function () {
+    console.log('Server running on port ', 3000);
 });
 
 
