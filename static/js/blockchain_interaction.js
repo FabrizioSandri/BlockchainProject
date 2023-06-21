@@ -530,7 +530,17 @@ function getNFTDetails(HNFTaddress) {
                                         image: metadataInfo.image
                                     });
                                 }).catch((err) => {
-                                    reject("error [getMetadata] : " + err);
+                                    resolve({
+                                        name: name,
+                                        symbol: symbol,
+                                        address: HNFTaddress,
+                                        price: price,
+                                        owner: owner,
+                                        issuer: issuer,
+                                        approved: approved,
+                                        description: "-",
+                                        image: "images/hnft.png"
+                                    });
                                 });
                             }).catch((err) => {
                                 reject("error [isAssociationApproved] : " + err);
