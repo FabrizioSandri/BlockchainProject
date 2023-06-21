@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node app.js",
     "build": "truffle migrate --reset",
-    "test": "node test/testScript.js"
+    "test": "truffle test"
   }
 
 }

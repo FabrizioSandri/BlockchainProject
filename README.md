@@ -2,9 +2,21 @@
 
 This repository contains the implementation of an architecture specifically designed to handle Honey NFTs, which serve as digital assets representing a batch of honey throughout its journey from the association to its final destination.
 
-## Association Usage
-To get started with this web application, follow the steps below:
+## Usage
 
+### Important note before using the application
+It is essential to understand that in the current implementation, both the buyers and the association must be aware of the same address of the Main smart contract in order to interact correctly. To ensure smooth communication, the Association, upon deploying the Main smart contract, is responsible for distributing the web application package that includes the accurate address of the Main smart contract stored inside the [static/contracts/const.json](https://github.com/FabrizioSandri/BlockchainProject/tree/main/static/contracts/const.json) file.
+
+To follow the workflow for running this application, please follow the steps outlined below:
+
+1. The association deploys the Main smart contract according to the instructions provided below.
+2. The association then distributes the web application package to the buyers, ensuring that it contains the correct address of the Main smart contract.
+
+By following these steps, all buyers will have access to and interact with the same instance of the Main smart contract, facilitating a seamless and consistent user experience.
+
+
+### Association Usage
+If you are the association and want to get started with this web application, follow the steps below:
 
 1.  Clone this repository to your local machine and navigate to the project directory and install the necessary dependencies by running:
    ```shell
@@ -28,7 +40,8 @@ To get started with this web application, follow the steps below:
 6. You can now access the web app locally by opening your browser and visiting [127.0.0.1:3000](http://127.0.0.1:3000).
 
 
-## Buyer Usage
+### Buyer Usage
+If you are a buyer and want to get started with this web application, follow the steps below:
 
 1.  Clone this repository to your local machine and navigate to the project directory and install the necessary dependencies by running:
    ```shell
@@ -44,14 +57,11 @@ To get started with this web application, follow the steps below:
 3. You can now access the web app locally by opening your browser and visiting [127.0.0.1:3000](http://127.0.0.1:3000).
 
 
-## Important Note
-It is essential to understand that in the current implementation, where the Main smart contract is assumed to be deployed on a public blockchain, both the buyers and the association must be aware of the same address of the Main smart contract in order to interact correctly. To ensure smooth communication, the Association, upon deploying the Main smart contract, is responsible for distributing the web application package that includes the accurate address of the Main smart contract stored inside the [static/contracts/const.json](https://github.com/FabrizioSandri/BlockchainProject/tree/main/static/contracts/const.json) file.
+## Running the Tests
+To execute the unit tests for the smart contracts, you can utilize the following command:
 
-To simplify the testing process, we assume that all buyers will refer to the same Main smart contract. To follow the testing workflow for this application, please follow the steps outlined below:
+```shell
+npm run test
+```
 
-1. The association deploys the Main smart contract according to the instructions provided.
-2. The association then distributes the web application package to the buyers, ensuring that it contains the correct address of the Main smart contract.
-
-By following these steps, all buyers will have access to and interact with the same instance of the Main smart contract, facilitating a seamless and consistent user experience.
-
-Please ensure that you are familiar with the provided documentation and guidelines for the proper usage and deployment of the BlockchainProject application. If you encounter any issues or require further assistance, do not hesitate to reach out to use.
+By running this command, the test suite will be initiated, allowing you to verify the functionality and integrity of the smart contracts. Please ensure that all dependencies are properly installed before running the tests.
