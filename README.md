@@ -1,18 +1,20 @@
-# BlockchainProject - HNFTs
+# BlockchainProject - HNFT <img src="https://github.com/FabrizioSandri/BlockchainProject/assets/15068390/cb10f573-7558-4c6d-9ec1-644b4fec59d4" align="right" height="140" />
 
 This repository contains the implementation of an architecture specifically designed to handle Honey NFTs, which serve as digital assets representing a batch of honey throughout its journey from the association to its final destination.
 
+## Requirements
+Before launching the web application, ensure that Node JS is installed on your system. Additionally, if you intend to run the dapp from the association's perspective, it is essential to supply a valid Infura IPFS API key. You can specify this key within the [static/contracts/const.json](https://github.com/FabrizioSandri/BlockchainProject/tree/main/static/contracts/const.json) file.
+
 ## Usage
 
-### Important note before using the application
-It is essential to understand that in the current implementation, both the buyers and the association must be aware of the same address of the Main smart contract in order to interact correctly. To ensure smooth communication, the Association, upon deploying the Main smart contract, is responsible for distributing the web application package that includes the accurate address of the Main smart contract stored inside the [static/contracts/const.json](https://github.com/FabrizioSandri/BlockchainProject/tree/main/static/contracts/const.json) file.
-
-To follow the workflow for running this application, please follow the steps outlined below:
-
-1. The association deploys the Main smart contract according to the instructions provided below.
-2. The association then distributes the web application package to the buyers, ensuring that it contains the correct address of the Main smart contract.
-
-By following these steps, all buyers will have access to and interact with the same instance of the Main smart contract, facilitating a seamless and consistent user experience.
+> It is essential to understand that in the current implementation, both the buyers and the association must be aware of the same address of the Main smart contract in order to interact correctly. To ensure smooth communication, the Association, upon deploying the Main smart contract, is responsible for distributing the web application package that includes the accurate address of the Main smart contract stored inside the [static/contracts/const.json](https://github.com/FabrizioSandri/BlockchainProject/tree/main/static/contracts/const.json) file.
+>
+>To follow the workflow for running this application, please follow the steps outlined below:
+>
+>1. The association deploys the Main smart contract according to the instructions provided below.
+>2. The association then distributes the web application package to the buyers, ensuring that it contains the correct address of the Main smart contract.
+>
+>By following these steps, all buyers will have access to and interact with the same instance of the Main smart contract, facilitating a seamless and consistent user experience.
 
 
 ### Association Usage
