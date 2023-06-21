@@ -6,7 +6,7 @@ This repository contains the implementation of an architecture specifically desi
 Before launching the web application, ensure that Node JS is installed on your system. Additionally, if you intend to run the dapp from the association's perspective, it is essential to supply a valid Infura IPFS API key. You can specify this key within the [static/contracts/const.json](https://github.com/FabrizioSandri/BlockchainProject/tree/main/static/contracts/const.json) file.
 
 ## Usage
-
+> **Warning**
 > It is essential to understand that in the current implementation, both the buyers and the association must be aware of the same address of the Main smart contract in order to interact correctly. To ensure smooth communication, the Association, upon deploying the Main smart contract, is responsible for distributing the web application package that includes the accurate address of the Main smart contract stored inside the [static/contracts/const.json](https://github.com/FabrizioSandri/BlockchainProject/tree/main/static/contracts/const.json) file.
 >
 >To follow the workflow for running this application, please follow the steps outlined below:
@@ -25,21 +25,17 @@ If you are the association and want to get started with this web application, fo
    cd BlockchainProject
    npm install
    ```
-
 2. Configure the `ENV.json` file based on the provided template in [ENV.json.sample](https://github.com/FabrizioSandri/BlockchainProject/blob/main/ENV.json.sample). Ensure that you provide valid API keys for the Infura IPFS provider.
-
 3. Deploy the Main smart contract by running `truffle migrate --reset` or by simply running. 
    ```shell
    npm run build
    ```
    > NOTE: If you want to specify a custom network for the deployment you can edit [truffle-config.js](https://github.com/FabrizioSandri/BlockchainProject/blob/main/truffle-config.js)
-
 5. Once the project is properly set up, start the web app by running:
    ```shell
    npm run start
    ```
-
-6. You can now access the web app locally by opening your browser and visiting [127.0.0.1:3000](http://127.0.0.1:3000).
+6. You can now access the web app locally by opening your browser and visiting [localhost:3000](http://127.0.0.1:3000).
 
 
 ### Buyer Usage
@@ -50,13 +46,11 @@ If you are a buyer and want to get started with this web application, follow the
    cd BlockchainProject
    npm install
    ```
-
 2. Start the web app by running:
    ```shell
    npm start
    ```
-
-3. You can now access the web app locally by opening your browser and visiting [127.0.0.1:3000](http://127.0.0.1:3000).
+3. You can now access the web app locally by opening your browser and visiting [localhost:3000](http://127.0.0.1:3000).
 
 
 ## Running the Tests
