@@ -1,4 +1,4 @@
-# BlockchainProject - HNFT <img src="https://github.com/FabrizioSandri/BlockchainProject/assets/15068390/cb10f573-7558-4c6d-9ec1-644b4fec59d4" align="right" height="140" />
+# BlockchainProject - HNFT <img src="https://github.com/FabrizioSandri/BlockchainProject/blob/09cecba4b604a1103051fd1a704e54d386cc37b1/static/images/hnft.png" align="right" height="140" />
 
 This repository contains the implementation of an architecture specifically designed to handle Honey NFTs, which serve as digital assets representing a batch of honey throughout its journey from the association to its final destination.
 
